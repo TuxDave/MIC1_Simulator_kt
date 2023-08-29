@@ -1,0 +1,26 @@
+L'idea è di creare un simulatore ispezionabile in ogni suo dato del prototipo di processore inventato a scopo didattico da Andrew s. Tanenbaum nel suo libro universitario "Architettura degli elaboratori".
+
+Il simulatore non sarà un interprete artificiale dei file compilati .mic1, ma sarà una vera e propria riproduzione dei componenti che lavoreranno insieme per ricreare la stessa esperienza di una riproduzione bare metal del processore.
+Qui più specifiche riguardo il processore: https://users.cs.fiu.edu/~prabakar/cda4101/Common/notes/lecture17.html
+
+Sarà presente nell'applicativo una funzionalità che permetterà di modificare prima e durante l'esecuzione (tra uno step e l'altro) i valori dei registri, del control store e della memoria, inserire punti di interruzione e tanti altri artifizzi inseriti a scopo di comprendere meglio il funzionamento del processore durante lo studio.
+
+In futuro arriverà anche un compilatore per fare in modo che non si debba ricorrere a quello fornito dall'attuale esistente simulatore di mic1.
+
+Inoltre la possibilità di eseguire anche il linguaggio macchina IJVM facendo uso di un interprete predefinito fornito insieme al simulatore e caricabile in qualunque momento, oltre a poter caricare un interprete personalizzato in caso si volesse estendere a piacimento il linguaggio macchina.
+
+In fine sarà presente la possibilità di utilizzare l' STDIN e STDOUT per comunicare con i programmi scritti in linguaggion macchina.
+
+
+ROADMAP:
+[] Creazione componenti
+[] Creazione segnale di clock
+[] Coordinamento componenti
+[] Interfaccia con registri, control store e memoria
+[] Definizione datapath
+[] Esecuzione a massima velocità o step by step (anche temporizzato) di un microprogramma MIC1
+
+[] Aggiunta BreakPoint sul codice compilato caricato nel control store
+[] Possibilità di passare da modalità linguaggio PROCESSORE a linguaggio MACCHINA, caricando un interprete (predefinito o non) con successivo caricamento di macroprogramma compilato (.ijvm) sulla memoria.
+
+{} altre cose che mi verranno in mente
