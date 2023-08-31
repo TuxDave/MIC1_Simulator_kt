@@ -42,4 +42,6 @@ class T_ALU {
         rs[0].outputEnabled = true
         assertEquals(rs.getOutputValue(), 1)
     }
+
+    //TODO: scrivere i test per le funzioni
 }
