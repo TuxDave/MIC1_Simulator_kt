@@ -1,14 +1,27 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.*
+import com.tuxdave.mic1_simulator_kt.component.Register
+import com.tuxdave.mic1_simulator_kt.component.Register32
+import com.tuxdave.mic1_simulator_kt.component.Register8
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
+import com.tuxdave.mic1_simulator_kt.component.toInt
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class T_ALU {
+
+    private var rs: List<Register<Number>> = listOf()
+
+    @BeforeTest
+    fun setup(){
+        rs = listOf(Register32(1), Register8(128.toByte())) as? List<Register<Number>> ?: listOf()
+    }
+
     @Test
     fun t_toInt(){
-        var a = booleanArrayOf(false, false, false, false, false, false)
+        val a = booleanArrayOf(false, false, false, false, false, false)
         assertEquals(a.toInt(), 0)
         a[5] = true
         assertEquals(a.toInt(), 1)
@@ -19,10 +32,14 @@ class T_ALU {
     }
 
     @Test
-    fun t_registers_getValueOutput(){
-        val rs: List<Source<Number>> = listOf(Register32(1) as Register<Number>, Register8(128.toByte()) as Register<Number>)
+    fun t_registers_getValueOutput1(){
         rs[1].outputEnabled = true
-        assertEquals(rs.getOutputValue(),128)
-        //TODO: think about this fail
+        assertEquals(rs.getOutputValue(), -128)
+    }
+
+    @Test
+    fun t_registers_getValueOutput2(){
+        rs[0].outputEnabled = true
+        assertEquals(rs.getOutputValue(), 1)
     }
 }

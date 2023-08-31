@@ -10,3 +10,8 @@ interface Source<T> {
         } else null
     }
 }
+
+/**
+ * @return only the value of the first register enabled
+ */
+fun List<Source<Number>>.getOutputValue(): Number? = this.firstOrNull { it.outputEnabled }?.getValueOutput()?.toInt()

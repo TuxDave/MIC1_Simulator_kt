@@ -22,8 +22,3 @@ abstract class Register<T: Any> : Source<T>, Destination<T> {
 
 class Register32(override var value: Int = 0) : Register<Int>()
 class Register8(override var value: Byte = 0) : Register<Byte>()
-
-/**
- * @return only the value of the first register enabled
- */
-fun List<Source<Number>>.getOutputValue(): Number? = this.firstOrNull { it.outputEnabled }?.getValueOutput()?.toInt()

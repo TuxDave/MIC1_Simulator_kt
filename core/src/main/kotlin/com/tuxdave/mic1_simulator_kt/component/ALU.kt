@@ -2,6 +2,7 @@ package com.tuxdave.mic1_simulator_kt.component
 
 import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
 
 class ALU(
     private var a: Register32,
@@ -12,7 +13,7 @@ class ALU(
 
     override fun run() {
         val av = a.getValueOutput()?.toInt()
-        val bv = b.getOutputValue()?.toInt()
+        val bv = b.getOutputValue() as Int?
         c = when (constrolSignal.toInt()) {
             24 -> av
             20 -> bv
