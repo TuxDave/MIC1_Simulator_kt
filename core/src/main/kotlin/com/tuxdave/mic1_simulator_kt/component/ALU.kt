@@ -44,20 +44,18 @@ class ALU(
     override var output: Int
         get() = c
         set(value) {}
-
-    companion object{
-        val bRegisterBus: Array<RegNames> = arrayOf(
-            RegNames.MDR,
-            RegNames.PC,
-            RegNames.MBR,
-            RegNames.SP,
-            RegNames.LV,
-            RegNames.CPP,
-            RegNames.TOS,
-            RegNames.OPC
-        )
-    }
 }
+
+val B_REGISTER_BUS: Array<RegNames> = arrayOf(
+    RegNames.MDR,
+    RegNames.PC,
+    RegNames.MBR,
+    RegNames.SP,
+    RegNames.LV,
+    RegNames.CPP,
+    RegNames.TOS,
+    RegNames.OPC
+)
 
 fun BooleanArray.toInt(): Int {
     var ret = 0

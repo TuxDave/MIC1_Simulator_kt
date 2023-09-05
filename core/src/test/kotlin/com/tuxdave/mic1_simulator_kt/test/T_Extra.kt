@@ -1,8 +1,8 @@
-package com.tuxdave.mic1_simulator_kt
+package com.tuxdave.mic1_simulator_kt.test
 
+import com.tuxdave.mic1_simulator_kt.toBooleanArray
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
 
 class T_Extra {
 
