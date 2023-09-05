@@ -18,6 +18,8 @@ class Shifter(val alu: Source<Int>): ClockBasedComponent(), Source<Int> {
         if (shiftLeft8 != null) {
             value = if (shiftLeft8!!) alu.output shl 8 else alu.output shr 1
             shiftLeft8 = null
+        } else {
+            value = alu.output
         }
     }
 

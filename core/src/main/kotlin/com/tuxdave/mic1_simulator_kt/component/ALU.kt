@@ -12,7 +12,7 @@ class ALU(
     private var constrolSignal: BooleanArray = (0 .. 5).map { true }.toBooleanArray()
 
     override fun run() {
-        val av = a.getValueOutput()?.toInt()
+        val av = a.getValueOutput()
         val bv = b.getOutputValue() as Int?
         c = when (constrolSignal.toInt()) {
             24 -> av
