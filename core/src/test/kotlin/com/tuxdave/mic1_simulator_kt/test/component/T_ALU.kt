@@ -1,22 +1,24 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.Register
-import com.tuxdave.mic1_simulator_kt.component.Register32
-import com.tuxdave.mic1_simulator_kt.component.Register8
+import com.tuxdave.mic1_simulator_kt.component.*
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
 import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
-import com.tuxdave.mic1_simulator_kt.component.toInt
+import com.tuxdave.mic1_simulator_kt.toBooleanArray
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class T_ALU {
 
+    private lateinit var a: Register32
     private var rs: List<Register<Number>> = listOf()
+    private lateinit var alu: ALU
 
     @BeforeTest
     fun setup(){
-        rs = listOf(Register32(1), Register8(128.toByte())) as? List<Register<Number>> ?: listOf()
+        a = Register32(1)
+        rs = listOf(Register32(10), Register8(128.toByte())) as? List<Register<Number>> ?: listOf()
+        alu = ALU(a, rs as List<Source<Number>>)
     }
 
     @Test
@@ -40,8 +42,49 @@ class T_ALU {
     @Test
     fun t_registers_getValueOutput2(){
         rs[0].outputEnabled = true
-        assertEquals(rs.getOutputValue(), 1)
+        assertEquals(rs.getOutputValue(), 10)
     }
 
-    //TODO: scrivere i test per le funzioni
+    @Test
+    fun t_znfalse(){
+        a.outputEnabled = true
+        rs[0].outputEnabled = true
+        val f = 63u.toUByte().toBooleanArray()
+        alu.constrolSignal = f
+        alu.run()
+        alu.outputEnabled = true
+        assertEquals(alu.output, 9)
+        assertEquals(alu.z, false)
+        assertEquals(alu.n, false)
+    }
+
+    @Test
+    fun t_z(){
+        a.outputEnabled = true
+        rs[0].outputEnabled = true
+        val f = 63u.toUByte().toBooleanArray()
+        a.value = 10
+        rs[0].value = 1
+        alu.constrolSignal = f
+        alu.run()
+        alu.outputEnabled = true
+        assertEquals(alu.output, -9)
+        assertEquals(alu.z, false)
+        assertEquals(alu.n, true)
+    }
+
+    @Test
+    fun t_n(){
+        a.outputEnabled = true
+        rs[0].outputEnabled = true
+        val f = 63u.toUByte().toBooleanArray()
+        a.value = 1
+        rs[0].value = 1
+        alu.constrolSignal = f
+        alu.run()
+        alu.outputEnabled = true
+        assertEquals(alu.output, 0)
+        assertEquals(alu.z, true)
+        assertEquals(alu.n, false)
+    }
 }

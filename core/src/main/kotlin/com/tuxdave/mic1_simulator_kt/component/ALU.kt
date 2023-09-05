@@ -5,11 +5,13 @@ import com.tuxdave.mic1_simulator_kt.component.legacy.Source
 import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
 
 class ALU(
-    private var a: Register32,
-    private var b: List<Register<Number>>
+    private var a: Source<Int>,
+    private var b: List<Source<Number>>
 ): ClockBasedComponent(), Source<Int> {
     private var c: Int = 0
-    private var constrolSignal: BooleanArray = (0 .. 5).map { true }.toBooleanArray()
+    var constrolSignal: BooleanArray = (0 .. 5).map { true }.toBooleanArray()
+    var n = false
+    var z = false
 
     override fun run() {
         val av = a.getValueOutput()
@@ -33,6 +35,8 @@ class ALU(
             50 -> -1
             else -> 0
         } ?: 0
+        n = c < 0
+        z = c == 0
         outputEnabled = true
     }
 
@@ -40,6 +44,19 @@ class ALU(
     override var output: Int
         get() = c
         set(value) {}
+
+    companion object{
+        val bRegisterBus: Array<RegNames> = arrayOf(
+            RegNames.MDR,
+            RegNames.PC,
+            RegNames.MBR,
+            RegNames.SP,
+            RegNames.LV,
+            RegNames.CPP,
+            RegNames.TOS,
+            RegNames.OPC
+        )
+    }
 }
 
 fun BooleanArray.toInt(): Int {

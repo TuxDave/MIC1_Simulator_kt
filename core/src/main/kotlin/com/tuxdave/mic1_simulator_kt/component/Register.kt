@@ -22,3 +22,16 @@ abstract class Register<T: Any> : Source<T>, Destination<T> {
 
 class Register32(override var value: Int = 0) : Register<Int>()
 class Register8(override var value: Byte = 0) : Register<Byte>()
+
+enum class RegNames {
+    MAR,
+    MDR,
+    PC,
+    MBR,
+    SP,
+    LV,
+    CPP,
+    TOS,
+    OPC,
+    H
+}
