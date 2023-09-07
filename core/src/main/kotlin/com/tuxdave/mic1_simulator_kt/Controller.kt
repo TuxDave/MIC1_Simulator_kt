@@ -33,6 +33,6 @@ class Controller {
         to = registers.filter { it.key in C_BUS_DESTINATIONS }.values.toList() as List<Destination<Int>>
     )
 
-    //TODO: write constrolstore, memory and dispatcher, than add here
+    //TODO: write memory and dispatcher (with MIR and MPC composition for jumps), than add here
     private val clockCycle: Array<ClockBasedComponent> = arrayOf(alu,shifter, cBus)
 }
