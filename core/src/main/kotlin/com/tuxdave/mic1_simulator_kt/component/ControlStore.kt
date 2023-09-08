@@ -2,7 +2,7 @@ package com.tuxdave.mic1_simulator_kt.component
 
 class ControlStore {
     companion object {
-        const val DATA_LENGTH: Int = 39
+        const val DATA_LENGTH: Int = 36
         const val DATA_LINES: Int = 512
     }
 
