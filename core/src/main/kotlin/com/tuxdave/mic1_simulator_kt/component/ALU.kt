@@ -9,14 +9,16 @@ class ALU(
     private var b: List<Source<Number>>
 ): ClockBasedComponent(), Source<Int> {
     private var c: Int = 0
-    var constrolSignal: BooleanArray = (0 .. 5).map { true }.toBooleanArray()
+    var controlSignal: BooleanArray = (0 .. 5).map { true }.toBooleanArray()
     var n = false
+        private set
     var z = false
+        private set
 
     override fun run() {
         val av = a.getValueOutput()
         val bv = b.getOutputValue() as Int?
-        c = when (constrolSignal.toInt()) {
+        c = when (controlSignal.toInt()) {
             24 -> av
             20 -> bv
             26 -> av?.inv()

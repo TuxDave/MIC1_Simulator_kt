@@ -5,7 +5,8 @@ import java.lang.IllegalArgumentException
 enum class MirRange private constructor(val bitRange: IntRange) {
     NEXT_ADDRESS(0 until 9),
     JAM(9 until 12),
-    ALU(12 until 20),
+    SHIFTER(12 until 14),
+    ALU(14 until 20),
     C(20 until 29),
     MEM(29 until 32),
     B(32 until 36)

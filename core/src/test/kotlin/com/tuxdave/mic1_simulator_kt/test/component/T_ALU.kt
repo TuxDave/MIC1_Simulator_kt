@@ -50,7 +50,7 @@ class T_ALU {
         a.outputEnabled = true
         rs[0].outputEnabled = true
         val f = 63u.toUByte().toBooleanArray()
-        alu.constrolSignal = f
+        alu.controlSignal = f
         alu.run()
         alu.outputEnabled = true
         assertEquals(alu.output, 9)
@@ -65,7 +65,7 @@ class T_ALU {
         val f = 63u.toUByte().toBooleanArray()
         a.value = 10
         rs[0].value = 1
-        alu.constrolSignal = f
+        alu.controlSignal = f
         alu.run()
         alu.outputEnabled = true
         assertEquals(alu.output, -9)
@@ -80,7 +80,7 @@ class T_ALU {
         val f = 63u.toUByte().toBooleanArray()
         a.value = 1
         rs[0].value = 1
-        alu.constrolSignal = f
+        alu.controlSignal = f
         alu.run()
         alu.outputEnabled = true
         assertEquals(alu.output, 0)

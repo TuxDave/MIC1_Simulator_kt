@@ -4,7 +4,6 @@ import com.tuxdave.mic1_simulator_kt.component.*
 import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
-import java.time.Clock
 
 class Controller: ClockBasedComponent(){
     private val registers: Map<RegNames, Register<Number>> = mapOf(
@@ -34,14 +33,30 @@ class Controller: ClockBasedComponent(){
         to = registers.filter { it.key in C_BUS_DESTINATIONS }.values.toList() as List<Destination<Int>>
     )
 
+    private lateinit var controlStore: ControlStore
     private var mpc = 0
     private var mir = MicroIstructionRegister(BooleanArray(ControlStore.DATA_LENGTH))
 
     //TODO: write memory and dispatcher (with MIR and MPC composition for jumps), than add here
     private val clockCycle: Array<ClockBasedComponent> = arrayOf(alu,shifter, cBus)
+
+    private fun dispatch() {
+        alu.controlSignal = mir[MirRange.ALU]
+        shifter.shiftLeft8 = if (mir[MirRange.SHIFTER].none { it }) null else mir[MirRange.SHIFTER][0]
+
+        run {
+            val b = mir[MirRange.B].toInt()
+            val which = RegNames.getFromDecodeUnit(b.toUByte())
+            //TODO: Capire come gestire il fatto di MBRU | TESTAREEEE
+        }
+    }
+
     override fun run() {
+        mir.data = controlStore[mpc]
+        dispatch()
         //FETCH: dispatch the current control store microistruction throught the components
         //EXECUTE: doing clockCycle
+        //WRITEBACK TODO: Manage the memory writes
         //JUMP: compute the MPC from the nextAddr, JAM and NZ
         //LOOP
     }
