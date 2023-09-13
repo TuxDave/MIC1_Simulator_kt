@@ -2,6 +2,7 @@ package com.tuxdave.mic1_simulator_kt.test.component
 
 import com.tuxdave.mic1_simulator_kt.component.Register32
 import com.tuxdave.mic1_simulator_kt.component.Register8
+import com.tuxdave.mic1_simulator_kt.component.Register8U
 import junit.framework.TestCase.assertEquals
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -29,5 +30,18 @@ class T_Register {
         assert(13.toByte() == r8.getValueOutput())
         assertEquals(r8.inputEnabled, false)
         assertEquals(null, r8.getValueOutput())
+    }
+
+    @Test
+    fun t2(){
+        val r8 = Register8(10)
+        val r8u = Register8U(r8)
+        assertEquals(null, r8u.getValueOutput())
+        r8u.outputEnabled = true
+        assertEquals(10u.toUByte(), r8u.getValueOutput())
+        r8.inputEnabled = true
+        r8.setValueInput(-10)
+        r8u.outputEnabled = true
+        assertEquals(246u.toUByte(), r8u.getValueOutput())
     }
 }

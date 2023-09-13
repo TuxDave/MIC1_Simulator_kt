@@ -6,7 +6,7 @@ import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
 
 class Controller: ClockBasedComponent(){
-    private val registers: Map<RegNames, Register<Number>> = mapOf(
+    private var registers: Map<RegNames, Register<Number>> = mapOf(
         Pair(RegNames.MAR, Register32() as Register<Number>),
         Pair(RegNames.MDR, Register32() as Register<Number>),
         Pair(RegNames.PC, Register32() as Register<Number>),
@@ -19,36 +19,47 @@ class Controller: ClockBasedComponent(){
         Pair(RegNames.H, Register32() as Register<Number>)
     )
 
-    private val alu: ALU = ALU(
-        registers.getOrElse(RegNames.H) {Register32()} as Source<Int>,
-        registers.filter { it.key in B_REGISTER_BUS }.values.toList()
-    )
+    private val alu: ALU
 
-    private val shifter = Shifter(
-        alu
-    )
+    private val shifter: Shifter
 
-    private val cBus = OneToMoreBus(
-        from = shifter,
-        to = registers.filter { it.key in C_BUS_DESTINATIONS }.values.toList() as List<Destination<Int>>
-    )
+    private val cBus: OneToMoreBus
 
     private lateinit var controlStore: ControlStore
     private var mpc = 0
     private var mir = MicroIstructionRegister(BooleanArray(ControlStore.DATA_LENGTH))
 
     //TODO: write memory and dispatcher (with MIR and MPC composition for jumps), than add here
-    private val clockCycle: Array<ClockBasedComponent> = arrayOf(alu,shifter, cBus)
+    private val clockCycle: Array<ClockBasedComponent>
 
     private fun dispatch() {
         alu.controlSignal = mir[MirRange.ALU]
         shifter.shiftLeft8 = if (mir[MirRange.SHIFTER].none { it }) null else mir[MirRange.SHIFTER][0]
 
-        run {
+        run { // enabling the output from 1 b bus register connected
             val b = mir[MirRange.B].toInt()
             val which = RegNames.getFromDecodeUnit(b.toUByte())
-            //TODO: Capire come gestire il fatto di MBRU | TESTAREEEE
+            registers[which]?.outputEnabled = true
+            //TODO: TESTAREEEE
         }
+    }
+
+    init {
+        registers += Pair(RegNames.MBRU, Register8U(registers[RegNames.MBR]!! as Register8) as Register<Number>)
+
+        alu = ALU(
+            registers.getOrElse(RegNames.H) {Register32()} as Source<Int>,
+            registers.filter { it.key in B_REGISTER_BUS }.values.toList()
+        )
+
+        shifter = Shifter(alu)
+
+        cBus = OneToMoreBus(
+            from = shifter,
+            to = registers.filter { it.key in C_BUS_DESTINATIONS }.values.toList() as List<Destination<Int>>
+        )
+
+        clockCycle = arrayOf(alu,shifter, cBus)
     }
 
     override fun run() {
