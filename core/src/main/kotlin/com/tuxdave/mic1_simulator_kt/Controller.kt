@@ -43,7 +43,7 @@ class Controller: ClockBasedComponent(){
             //TODO: TESTAREEEE
         }
 
-        run{ // enabling the input on the C reciever registers
+        run{ // enabling the input on the C receiver registers
             val cs = mir[MirRange.C]
             cs.zip(C_SEQUENCE).forEach{
                 if (it.first) {
@@ -75,7 +75,8 @@ class Controller: ClockBasedComponent(){
         mir.data = controlStore[mpc]
         dispatch()
         clockCycle.forEach { it.run() }
-        //WRITEBACK TODO: Manage the memory writes
+        //TODO: missing: JAM_C/Z/N, MEM, NEXT_ADDR
+        //WRITEBACK: Manage the memory writes
         //JUMP: compute the MPC from the nextAddr, JAM and NZ
         //LOOP
     }
