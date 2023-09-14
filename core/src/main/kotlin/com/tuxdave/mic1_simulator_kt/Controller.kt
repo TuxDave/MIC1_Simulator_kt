@@ -26,7 +26,7 @@ class Controller: ClockBasedComponent(){
     private val cBus: OneToMoreBus
 
     private lateinit var controlStore: ControlStore
-    private var mpc = 0
+    private var mpc: Int = 0
     private var mir = MicroIstructionRegister(BooleanArray(ControlStore.DATA_LENGTH))
 
     //TODO: write memory and dispatcher (with MIR and MPC composition for jumps), than add here
@@ -41,6 +41,15 @@ class Controller: ClockBasedComponent(){
             val which = RegNames.getFromDecodeUnit(b.toUByte())
             registers[which]?.outputEnabled = true
             //TODO: TESTAREEEE
+        }
+
+        run{ // enabling the input on the C reciever registers
+            val cs = mir[MirRange.C]
+            cs.zip(C_SEQUENCE).forEach{
+                if (it.first) {
+                    registers[it.second]?.inputEnabled = true
+                }
+            }
         }
     }
 
@@ -65,8 +74,7 @@ class Controller: ClockBasedComponent(){
     override fun run() {
         mir.data = controlStore[mpc]
         dispatch()
-        //FETCH: dispatch the current control store microistruction throught the components
-        //EXECUTE: doing clockCycle
+        clockCycle.forEach { it.run() }
         //WRITEBACK TODO: Manage the memory writes
         //JUMP: compute the MPC from the nextAddr, JAM and NZ
         //LOOP

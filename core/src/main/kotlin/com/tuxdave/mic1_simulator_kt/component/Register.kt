@@ -51,3 +51,15 @@ enum class RegNames(private val decodeIndex: UByte?) {
         }
     }
 }
+
+val C_SEQUENCE = arrayOf(
+    RegNames.H,
+    RegNames.OPC,
+    RegNames.TOS,
+    RegNames.CPP,
+    RegNames.LV,
+    RegNames.SP,
+    RegNames.PC,
+    RegNames.MDR,
+    RegNames.MAR
+)
