@@ -1,7 +1,5 @@
 package com.tuxdave.mic1_simulator_kt.component
 
-import java.lang.IllegalArgumentException
-
 enum class MirRange private constructor(val bitRange: IntRange) {
     NEXT_ADDRESS(0 until 9),
     JAM(9 until 12),

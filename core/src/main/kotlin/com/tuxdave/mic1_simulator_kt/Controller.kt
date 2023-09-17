@@ -39,7 +39,6 @@ class Controller: ClockBasedComponent(){
             val b = mir[MirRange.B].toInt()
             val which = RegNames.getFromDecodeUnit(b.toUByte())
             registers[which]?.outputEnabled = true
-            //TODO: TESTAREEEE
         }
 
         run{ // enabling the input on the C receiver registers
@@ -74,7 +73,7 @@ class Controller: ClockBasedComponent(){
         mir.data = controlStore[mpc]
         dispatch()
         clockCycle.forEach { it.run() }
-        //TODO: missing: JAM_C/Z/N, MEM, NEXT_ADDR
+        //TODO: missing: JAM_C/Z/N, NEXT_ADDR
         //WRITEBACK: Manage the memory writes
         //JUMP: compute the MPC from the nextAddr, JAM and NZ
         //LOOP
