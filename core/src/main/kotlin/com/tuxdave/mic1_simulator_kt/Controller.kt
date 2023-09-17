@@ -29,7 +29,6 @@ class Controller: ClockBasedComponent(){
     private var mpc: Int = 0
     private var mir = MicroIstructionRegister(BooleanArray(ControlStore.DATA_LENGTH))
 
-    //TODO: write memory and dispatcher (with MIR and MPC composition for jumps), than add here
     private val clockCycle: Array<ClockBasedComponent>
 
     private fun dispatch() {

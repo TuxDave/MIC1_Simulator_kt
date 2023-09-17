@@ -1,7 +1,7 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
 import com.tuxdave.mic1_simulator_kt.component.ControlStore
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
