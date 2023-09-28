@@ -34,6 +34,8 @@ class Controller: ClockBasedComponent(){
 
     private val clockCycle: Array<ClockBasedComponent>
 
+    var running = true
+
     init {
         registers += Pair(RegNames.MBRU, Register8U(registers[RegNames.MBR]!! as Register8) as Register<Number>)
 
@@ -82,14 +84,17 @@ class Controller: ClockBasedComponent(){
     private fun jump() {
         val jamcnz = mir[MirRange.JAM]
         val nextAddr = mir[MirRange.NEXT_ADDRESS]
-        if (jamcnz.count { it } == 0) {
-            mpc = nextAddr.toInt()
-        } else if (jamcnz[0]) {
+        if (jamcnz[0]) { //salto a molte vie
             val mbr: Int = (registers[RegNames.MBR] as? Register8)?.output?.toInt() ?: 0
             for (i in 8 downTo 1) { //dalla posizione più a destra alla penultima a sinistra
                 nextAddr[i] = ((mbr shr (8-i)) % 2 == 1) || nextAddr[i]
             }
-        } //TODO: fare jamn e jamz e TESTARE
+        } else if (jamcnz[1]) { //salto se ultima operazione avesse risultato negativo
+            nextAddr[0] = nextAddr[0] || alu.n
+        } else if (jamcnz[2]) { //risultato == 0
+            nextAddr[0] = nextAddr[0] || alu.z
+        }
+        mpc = nextAddr.toInt()
     }
 
     override fun run() {
@@ -97,8 +102,5 @@ class Controller: ClockBasedComponent(){
         dispatch()
         clockCycle.forEach { it.run() }
         jump()
-        //TODO: missing: JAM_C/Z/N, NEXT_ADDR
-        //JUMP: compute the MPC from the nextAddr, JAM and NZ
-        //LOOP
     }
 }
