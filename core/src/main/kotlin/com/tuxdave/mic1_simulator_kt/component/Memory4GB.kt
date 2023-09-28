@@ -28,39 +28,51 @@ class Memory4GB(
         val MAX_ADDR = 2.0.pow(30.0).toInt()
     }
 
-    private enum class Transition {
+    private enum class Transition(var fromTo: Int = 0, var value: Int = 0) {
         READ,
         WRITE,
-        FETCH
+        FETCH;
+
+        data class Data(var from_to: Int, var value: Int)
     }
 
     override fun run() {
         if (wrfSignal.count { it } == 1) {
             queue.add(
                 if (wrfSignal[0]) {
-                    Pair(0, Transition.WRITE)
+                    val t = Transition.WRITE
+                    t.fromTo = mar.output
+                    t.value = mdr.output
+                    Pair(0, t)
                 } else if (wrfSignal[1]) {
-                    Pair(0, Transition.READ)
-                } else Pair(0, Transition.FETCH)
+                    val t = Transition.READ
+                    t.value = this[mar.output]
+                    Pair(0, t)
+                } else {
+                    val t = Transition.FETCH
+                    t.value = (this[pc.output shr 2] shr ((3 - (pc.output % 4)) * 8)).toByte().toInt()
+                    Pair(0, t)
+                }
             )
             wrfSignal = BooleanArray(3) { false }
         }
 
         queue.filter { it.first == 1 }.forEach {
-            when (it.second) {
+            val t = it.second
+            when (t) {
                 Transition.WRITE -> {
-                    this[mar.output] = mdr.output
+                    this[t.fromTo] = t.value
                 }
 
                 Transition.READ -> {
                     mdr.inputEnabled = true
-                    mdr.setValueInput(this[mar.output])
+                    mdr.setValueInput(t.value)
                 }
 
                 Transition.FETCH -> { //01234567 -> 0=01, 1=23, 2=45, 3=67 .... <- that endian
                     val wordAddr = pc.output
                     mbr.inputEnabled = true
-                    mbr.setValueInput((this[wordAddr shr 2] shr ((3 - (wordAddr % 4)) * 8)).toByte())
+                    mbr.setValueInput(t.value.toByte())
                 }
             }
         }

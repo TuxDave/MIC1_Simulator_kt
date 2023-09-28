@@ -4,6 +4,7 @@ import com.tuxdave.mic1_simulator_kt.component.*
 import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import java.lang.IllegalArgumentException
 
 class Controller: ClockBasedComponent(){
     private var registers: Map<RegNames, Register<Number>> = mapOf(
@@ -18,6 +19,8 @@ class Controller: ClockBasedComponent(){
         Pair(RegNames.OPC, Register32() as Register<Number>),
         Pair(RegNames.H, Register32() as Register<Number>)
     )
+
+    private val memory4GB: Memory4GB;
 
     private val alu: ALU
 
@@ -66,7 +69,14 @@ class Controller: ClockBasedComponent(){
             to = registers.filter { it.key in C_BUS_DESTINATIONS }.values.toList() as List<Destination<Int>>
         )
 
-        clockCycle = arrayOf(alu,shifter, cBus)
+        memory4GB = Memory4GB(
+            registers[RegNames.MAR] as? Register32 ?: throw IllegalArgumentException("MEMORY: MAR non trovato"),
+            registers[RegNames.MDR] as? Register32 ?: throw IllegalArgumentException("MEMORY: MDR non trovato"),
+            registers[RegNames.MBR] as? Register8 ?: throw IllegalArgumentException("MEMORY: MBR non trovato"),
+            registers[RegNames.PC] as? Register32 ?: throw IllegalArgumentException("MEMORY: PC non trovato")
+        )
+
+        clockCycle = arrayOf(alu,shifter, cBus, memory4GB)
     }
 
     override fun run() {

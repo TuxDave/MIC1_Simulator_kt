@@ -153,4 +153,39 @@ class T_Memory4GB {
         mem.run()
         assert(mbr.output  == 0xb7.toByte())
     }
+
+    @Test
+    fun t6_write_differito() {
+        mar.inputEnabled = true
+        mar.setValueInput(0)
+        mdr.inputEnabled = true
+        mdr.setValueInput(1000)
+        mem.wrfSignal = booleanArrayOf(true, false, false)
+        assertEquals(
+            Memory4GB::class.declaredFunctions
+                .first { it.name == "get" }
+                .call(mem, 0) as Int,
+            0
+        )
+
+        mem.run()
+        assertEquals(
+            Memory4GB::class.declaredFunctions
+                .first { it.name == "get" }
+                .call(mem, 0) as Int,
+            0
+        )
+
+        //modifico il valore del registro prima che la scrittura venga effettivamente effettuata
+        mdr.inputEnabled = true
+        mdr.setValueInput(500)
+
+        mem.run()
+        assertEquals(
+            Memory4GB::class.declaredFunctions
+                .first { it.name == "get" }
+                .call(mem, 0) as Int,
+            1000
+        )
+    }
 }
