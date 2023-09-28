@@ -18,9 +18,9 @@ class Memory4GB(
             }
         }
 
-    private operator fun get(addr: Int): Int  = data[addr]
+    operator fun get(addr: Int): Int  = data[addr]
 
-    private operator fun set(addr: Int, value: Int) {
+    operator fun set(addr: Int, value: Int) {
         data[addr] = value
     }
 

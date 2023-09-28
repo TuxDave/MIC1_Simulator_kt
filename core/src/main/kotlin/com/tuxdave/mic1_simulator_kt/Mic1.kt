@@ -5,8 +5,16 @@ import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
 import java.lang.IllegalArgumentException
+import kotlin.ClassCastException
 
-class Controller: ClockBasedComponent(){
+/**
+ * Mic1, il SOC a forma di emulatore.
+ * Non autonomo, necessita che gli venga fornito il clock.
+ * Disponibili campi pubblici per la lettura e modifica dei dati.
+ * Clock da fornire esternamente chiamando il metodo run() per decidere la velocità di esecuzione
+ * */
+@Suppress(names = arrayOf("UNCHECKED_CAST", "NAME_SHADOWING"))
+class Mic1: ClockBasedComponent(){
     private var registers: Map<RegNames, Register<Number>> = mapOf(
         Pair(RegNames.MAR, Register32() as Register<Number>),
         Pair(RegNames.MDR, Register32() as Register<Number>),
@@ -102,5 +110,85 @@ class Controller: ClockBasedComponent(){
         dispatch()
         clockCycle.forEach { it.run() }
         jump()
+    }
+
+    // TODO: 2. Creare il metodo di load del file compilato (buona fortuna)
+
+    //Accessibility interface for the manager (probably a UI)
+    // TODO: 1. TESTARE
+
+    val mic1State: Mic1StateDTO
+        get() = Mic1StateDTO(
+            registers.map { Pair(it.key.toString(), it.value.output.toInt()) }.toMap(),
+            alu.n,
+            alu.z,
+            mpc,
+            mir.data
+        )
+
+    val mic1ControlStoreState: Array<BooleanArray>
+        get() = (0 until ControlStore.DATA_LINES).map { controlStore[it] }.toTypedArray()
+
+    fun getMic1MemoryRange(cellsRange: IntRange = 0 until 512): IntArray {
+        return cellsRange.map { memory4GB[it] }.toIntArray()
+    }
+
+    fun setMemoryValueFromCellNumber(position: Int, value: Int): Boolean {
+        return if (value in 0 until Memory4GB.MAX_ADDR) {
+            memory4GB[position] = value
+            true
+        } else false
+    }
+
+    fun setRegisterValue(reg: RegNames, value: Int): Boolean {
+        var value = value
+        if (reg == RegNames.MBRU) {
+            return false
+        } else if (reg == RegNames.MBR) {
+            value = value.toByte().toInt()
+        }
+        val r = registers[reg] ?: return false
+        try {
+            (r as Register32).value = value
+            return true
+        } catch (_: ClassCastException) {}
+        return try {
+            (r as Register8).value = value.toByte()
+            true
+        } catch (e: ClassCastException) {
+            false
+        }
+    }
+}
+
+data class Mic1StateDTO(
+    val registers: Map<String, Int>,
+    val aluN: Boolean,
+    val aluZ: Boolean,
+    val mpc: Int,
+    val mir: BooleanArray,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Mic1StateDTO
+
+        if (registers != other.registers) return false
+        if (aluN != other.aluN) return false
+        if (aluZ != other.aluZ) return false
+        if (mpc != other.mpc) return false
+        if (!mir.contentEquals(other.mir)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = registers.hashCode()
+        result = 31 * result + aluN.hashCode()
+        result = 31 * result + aluZ.hashCode()
+        result = 31 * result + mpc
+        result = 31 * result + mir.contentHashCode()
+        return result
     }
 }
