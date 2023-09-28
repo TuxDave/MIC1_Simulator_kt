@@ -20,7 +20,7 @@ class Controller: ClockBasedComponent(){
         Pair(RegNames.H, Register32() as Register<Number>)
     )
 
-    private val memory4GB: Memory4GB;
+    private val memory4GB: Memory4GB
 
     private val alu: ALU
 
@@ -33,26 +33,6 @@ class Controller: ClockBasedComponent(){
     private var mir = MicroIstructionRegister(BooleanArray(ControlStore.DATA_LENGTH))
 
     private val clockCycle: Array<ClockBasedComponent>
-
-    private fun dispatch() {
-        alu.controlSignal = mir[MirRange.ALU]
-        shifter.shiftLeft8 = if (mir[MirRange.SHIFTER].none { it }) null else mir[MirRange.SHIFTER][0]
-
-        run { // enabling the output from 1 b bus register connected
-            val b = mir[MirRange.B].toInt()
-            val which = RegNames.getFromDecodeUnit(b.toUByte())
-            registers[which]?.outputEnabled = true
-        }
-
-        run{ // enabling the input on the C receiver registers
-            val cs = mir[MirRange.C]
-            cs.zip(C_SEQUENCE).forEach{
-                if (it.first) {
-                    registers[it.second]?.inputEnabled = true
-                }
-            }
-        }
-    }
 
     init {
         registers += Pair(RegNames.MBRU, Register8U(registers[RegNames.MBR]!! as Register8) as Register<Number>)
@@ -79,12 +59,45 @@ class Controller: ClockBasedComponent(){
         clockCycle = arrayOf(alu,shifter, cBus, memory4GB)
     }
 
+    private fun dispatch() {
+        alu.controlSignal = mir[MirRange.ALU]
+        shifter.shiftLeft8 = if (mir[MirRange.SHIFTER].none { it }) null else mir[MirRange.SHIFTER][0]
+
+        run { // enabling the output from 1 b bus register connected
+            val b = mir[MirRange.B].toInt()
+            val which = RegNames.getFromDecodeUnit(b.toUByte())
+            registers[which]?.outputEnabled = true
+        }
+
+        run{ // enabling the input on the C receiver registers
+            val cs = mir[MirRange.C]
+            cs.zip(C_SEQUENCE).forEach{
+                if (it.first) {
+                    registers[it.second]?.inputEnabled = true
+                }
+            }
+        }
+    }
+
+    private fun jump() {
+        val jamcnz = mir[MirRange.JAM]
+        val nextAddr = mir[MirRange.NEXT_ADDRESS]
+        if (jamcnz.count { it } == 0) {
+            mpc = nextAddr.toInt()
+        } else if (jamcnz[0]) {
+            val mbr: Int = (registers[RegNames.MBR] as? Register8)?.output?.toInt() ?: 0
+            for (i in 8 downTo 1) { //dalla posizione più a destra alla penultima a sinistra
+                nextAddr[i] = ((mbr shr (8-i)) % 2 == 1) || nextAddr[i]
+            }
+        } //TODO: fare jamn e jamz e TESTARE
+    }
+
     override fun run() {
         mir.data = controlStore[mpc]
         dispatch()
         clockCycle.forEach { it.run() }
+        jump()
         //TODO: missing: JAM_C/Z/N, NEXT_ADDR
-        //WRITEBACK: Manage the memory writes
         //JUMP: compute the MPC from the nextAddr, JAM and NZ
         //LOOP
     }
