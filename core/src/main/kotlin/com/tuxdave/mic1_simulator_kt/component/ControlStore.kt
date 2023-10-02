@@ -31,6 +31,12 @@ class ControlStore {
             this[line][index] = value
         }
     }
+
+    fun reset() {
+        for (i in 0 until DATA_LINES) {
+            this[i] = BooleanArray(DATA_LENGTH)
+        }
+    }
 }
 
 

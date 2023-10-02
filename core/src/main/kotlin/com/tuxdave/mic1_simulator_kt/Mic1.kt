@@ -4,6 +4,7 @@ import com.tuxdave.mic1_simulator_kt.component.*
 import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import java.io.File
 import java.lang.IllegalArgumentException
 import kotlin.ClassCastException
 
@@ -113,9 +114,31 @@ class Mic1: ClockBasedComponent(){
     }
 
     // TODO: 2. Creare il metodo di load del file compilato (buona fortuna)
+    /*
+    * I file cominciano con 32 bit di magic constant (ci sta) 0x12345678
+    * Successivamente ci sono gruppi da 5 byte per istruzione.
+    * I primi 36 bit compongono l'istruzione, i successivi 4 (ultima cifra hex dell'ultimo byte) sono a 0 e "spezzano"
+    * */
 
-    //Accessibility interface for the manager (probably a UI)
-    // TODO: 1. TESTARE
+    fun loadMicroProgram(dotMic1: File): Boolean {
+        controlStore.reset()
+
+        val buff = CharArray(5)
+        val reader = dotMic1.bufferedReader()
+        var n = 1
+
+        val magic = CharArray(4)
+        reader.read(magic)
+        //magic check
+
+        while(n > 0) {
+            n = reader.read(buff); //read 5 byte and use the first 36 bit of each to compose the controlStore
+        }
+
+        return true
+    }
+
+    //========================Interfacciamento per lettura dati==============================
 
     val mic1State: Mic1StateDTO
         get() = Mic1StateDTO(
