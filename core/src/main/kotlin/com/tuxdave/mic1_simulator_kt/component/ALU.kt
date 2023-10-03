@@ -3,6 +3,7 @@ package com.tuxdave.mic1_simulator_kt.component
 import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
 import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
+import com.tuxdave.mic1_simulator_kt.toInt
 
 class ALU(
     private var a: Source<Int>,
@@ -58,13 +59,3 @@ val B_REGISTER_BUS: Array<RegNames> = arrayOf(
     RegNames.TOS,
     RegNames.OPC
 )
-
-fun BooleanArray.toInt(): Int {
-    var ret = 0
-    for(i in 1 .. size){
-        if(this[size - i]){
-            ret += 1 shl i - 1
-        }
-    }
-    return ret
-}

@@ -4,8 +4,10 @@ import com.tuxdave.mic1_simulator_kt.component.*
 import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
 import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
 import com.tuxdave.mic1_simulator_kt.component.legacy.Source
-import java.io.File
+import java.io.*
 import java.lang.IllegalArgumentException
+import java.net.URL
+import java.nio.CharBuffer
 import kotlin.ClassCastException
 
 /**
@@ -37,7 +39,7 @@ class Mic1: ClockBasedComponent(){
 
     private val cBus: OneToMoreBus
 
-    private lateinit var controlStore: ControlStore
+    private val controlStore: ControlStore = ControlStore()
     private var mpc: Int = 0
     private var mir = MicroIstructionRegister(BooleanArray(ControlStore.DATA_LENGTH))
 
@@ -113,29 +115,44 @@ class Mic1: ClockBasedComponent(){
         jump()
     }
 
-    // TODO: 2. Creare il metodo di load del file compilato (buona fortuna)
     /*
     * I file cominciano con 32 bit di magic constant (ci sta) 0x12345678
     * Successivamente ci sono gruppi da 5 byte per istruzione.
     * I primi 36 bit compongono l'istruzione, i successivi 4 (ultima cifra hex dell'ultimo byte) sono a 0 e "spezzano"
     * */
+    /**
+     * @return: null if OK, the String error if not loader
+     * */
+    fun loadMicroProgram(dotMic1: URL?): String? {
+        if (dotMic1 === null) return "Impossibile aprire il file: il riferimento è nullo..."
 
-    fun loadMicroProgram(dotMic1: File): Boolean {
         controlStore.reset()
 
-        val buff = CharArray(5)
-        val reader = dotMic1.bufferedReader()
+        val buff = ByteArray(5)
+        val reader: InputStream = dotMic1.openStream()
         var n = 1
 
-        val magic = CharArray(4)
+        val magic = ByteArray(4)
         reader.read(magic)
-        //magic check
-
-        while(n > 0) {
-            n = reader.read(buff); //read 5 byte and use the first 36 bit of each to compose the controlStore
+        if(!magic.contentEquals(byteArrayOf(0x12, 0x34, 0x56, 0x78))) {
+            return "Impossibile caricare questo file: non è un formato eseguibile da MIC1 (magic constant)"
         }
 
-        return true
+        var c = -1
+        while(n > 0) {
+            n = reader.read(buff)
+            controlStore[++c] = buff[0].toUByte().toBooleanArray(8) +
+                    buff[1].toUByte().toBooleanArray(8) +
+                    buff[2].toUByte().toBooleanArray(8) +
+                    buff[3].toUByte().toBooleanArray(8) +
+                    (buff[4].toUInt() shr 4).toUByte().toBooleanArray(4)
+        }
+        return if (c == ControlStore.DATA_LINES)
+            null
+        else {
+            controlStore.reset()
+            "Impossibile caricare questo file: Le istruzioni compilate ($c) devono essere ${ControlStore.DATA_LINES}"
+        }
     }
 
     //========================Interfacciamento per lettura dati==============================
