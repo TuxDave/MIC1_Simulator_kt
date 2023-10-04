@@ -13,9 +13,9 @@ import kotlin.test.assertEquals
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class T_Mic1 {
+    val mic = Mic1()
     @Test
-    fun t1_tryLoad(){
-        val mic = Mic1()
+    fun t0_tryLoad(){
         val res = mic.loadMicroProgram(this.javaClass.classLoader.getResource("resources/ijvm_std_interpreter.mic1"))
 //        val res = mic.loadMicroProgram(File("/home/tuxdave/Programmi/mic1simAA1314/mal/mic1ijvm.mic1").toURI().toURL())
         res?.let{println(res)}
@@ -33,5 +33,16 @@ class T_Mic1 {
         assertEquals(mic.mic1ControlStoreState[0x13].sliceArray(16 until 24).toInt(), 0x50)
         assertEquals(mic.mic1ControlStoreState[0x13].sliceArray(24 until 32).toInt(), 0x21)
         assertEquals(mic.mic1ControlStoreState[0x13].sliceArray(32 until 36).toInt(), 0x1)
+    }
+
+    @Test
+    fun t1_RegisterEditing(){
+        val res = mic.loadMicroProgram(this
+            .javaClass
+            .classLoader
+            .getResource("resources/mal_examples/ex1.mic1"))
+        res?.let{println(res)}
+        assert(res == null)
+        assertEquals(mic.mic1State.registers["PC"], 1)
     }
 }

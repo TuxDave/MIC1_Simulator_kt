@@ -21,11 +21,11 @@ class Mic1: ClockBasedComponent(){
     private var registers: Map<RegNames, Register<Number>> = mapOf(
         Pair(RegNames.MAR, Register32() as Register<Number>),
         Pair(RegNames.MDR, Register32() as Register<Number>),
-        Pair(RegNames.PC, Register32() as Register<Number>),
+        Pair(RegNames.PC, Register32(-1) as Register<Number>),
         Pair(RegNames.MBR, Register8() as Register<Number>),
-        Pair(RegNames.SP, Register32() as Register<Number>),
-        Pair(RegNames.LV, Register32() as Register<Number>),
-        Pair(RegNames.CPP, Register32() as Register<Number>),
+        Pair(RegNames.SP, Register32(0x8000) as Register<Number>),
+        Pair(RegNames.LV, Register32(0x8000) as Register<Number>),
+        Pair(RegNames.CPP, Register32(0x4000) as Register<Number>),
         Pair(RegNames.TOS, Register32() as Register<Number>),
         Pair(RegNames.OPC, Register32() as Register<Number>),
         Pair(RegNames.H, Register32() as Register<Number>)
@@ -159,7 +159,11 @@ class Mic1: ClockBasedComponent(){
 
     val mic1State: Mic1StateDTO
         get() = Mic1StateDTO(
-            registers.map { Pair(it.key.toString(), it.value.output.toInt()) }.toMap(),
+            registers.filter {
+                it.value !== registers[RegNames.MBRU]
+            }.map {
+                Pair(it.key.toString(), it.value.output.toInt())
+            }.toMap(),
             alu.n,
             alu.z,
             mpc,
