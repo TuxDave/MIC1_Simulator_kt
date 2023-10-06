@@ -8,12 +8,18 @@ import org.junit.runners.MethodSorters
 import java.io.File
 import java.net.URI
 import java.net.URL
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class T_Mic1 {
-    val mic = Mic1()
+    lateinit var mic: Mic1
+
+    @BeforeTest
+    fun setup(){
+        mic = Mic1()
+    }
     @Test
     fun t0_tryLoad(){
         val res = mic.loadMicroProgram(this.javaClass.classLoader.getResource("resources/ijvm_std_interpreter.mic1"))
@@ -43,6 +49,9 @@ class T_Mic1 {
             .getResource("resources/mal_examples/ex1.mic1"))
         res?.let{println(res)}
         assert(res == null)
+        for(i in 0 until 20){
+            mic.run()
+        }
         assertEquals(mic.mic1State.registers["PC"], 1)
     }
 }

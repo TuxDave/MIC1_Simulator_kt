@@ -8,9 +8,9 @@ import com.tuxdave.mic1_simulator_kt.toInt
 class ALU(
     private var a: Source<Int>,
     private var b: List<Source<Number>>
-): ClockBasedComponent(), Source<Int> {
+) : ClockBasedComponent(), Source<Int> {
     private var c: Int = 0
-    var controlSignal: BooleanArray = (0 .. 5).map { true }.toBooleanArray()
+    var controlSignal: BooleanArray = (0..5).map { true }.toBooleanArray()
     var n = false
         private set
     var z = false
@@ -24,18 +24,18 @@ class ALU(
             20 -> bv
             26 -> av?.inv()
             44 -> bv?.inv()
-            60 -> av?.plus(bv?:0)
-            61 -> av?.plus(bv?:0)?.plus(1)
+            60 -> av?.plus(bv ?: 0)
+            61 -> av?.plus(bv ?: 0)?.plus(1)
             57 -> av?.plus(1)
             53 -> bv?.plus(1)
-            63 -> bv?.minus(av?:0)
+            63 -> bv?.minus(av ?: 0)
             54 -> bv?.minus(1)
             59 -> av?.unaryMinus()
-            12 -> av?.and(bv?: 1)
-            28 -> av?.or(bv?:0)
+            12 -> av?.and(bv ?: 1)
+            28 -> av?.or(bv ?: 0)
             16 -> 0 // already in ELSE
-            49 -> 1
-            50 -> -1
+            49, 17 -> 1
+            50, 18 -> -1
             else -> 0
         } ?: 0
         n = c < 0

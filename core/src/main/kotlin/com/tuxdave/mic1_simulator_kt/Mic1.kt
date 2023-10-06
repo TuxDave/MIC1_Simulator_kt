@@ -45,8 +45,6 @@ class Mic1: ClockBasedComponent(){
 
     private val clockCycle: Array<ClockBasedComponent>
 
-    var running = true
-
     init {
         registers += Pair(RegNames.MBRU, Register8U(registers[RegNames.MBR]!! as Register8) as Register<Number>)
 
