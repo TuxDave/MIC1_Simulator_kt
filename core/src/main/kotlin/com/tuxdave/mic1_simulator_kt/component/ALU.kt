@@ -17,22 +17,22 @@ class ALU(
         private set
 
     override fun run() {
-        val av = a.getValueOutput()
+        val av = a.output
         val bv = b.getOutputValue() as Int?
         c = when (controlSignal.toInt()) {
             24 -> av
             20 -> bv
-            26 -> av?.inv()
+            26 -> av.inv()
             44 -> bv?.inv()
-            60 -> av?.plus(bv ?: 0)
-            61 -> av?.plus(bv ?: 0)?.plus(1)
-            57 -> av?.plus(1)
+            60 -> av.plus(bv ?: 0)
+            61 -> av.plus(bv ?: 0)?.plus(1)
+            57 -> av.plus(1)
             53 -> bv?.plus(1)
-            63 -> bv?.minus(av ?: 0)
+            63 -> bv?.minus(av)
             54 -> bv?.minus(1)
-            59 -> av?.unaryMinus()
-            12 -> av?.and(bv ?: 1)
-            28 -> av?.or(bv ?: 0)
+            59 -> av.unaryMinus()
+            12 -> av.and(bv ?: 1)
+            28 -> av.or(bv ?: 0)
             16 -> 0 // already in ELSE
             49, 17 -> 1
             50, 18 -> -1

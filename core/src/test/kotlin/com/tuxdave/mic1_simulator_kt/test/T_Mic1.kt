@@ -42,16 +42,32 @@ class T_Mic1 {
     }
 
     @Test
-    fun t1_RegisterEditing(){
+    fun t1_Registerassigning(){
         val res = mic.loadMicroProgram(this
             .javaClass
             .classLoader
             .getResource("resources/mal_examples/ex1.mic1"))
         res?.let{println(res)}
         assert(res == null)
-        for(i in 0 until 20){
+        repeat(3){
             mic.run()
         }
         assertEquals(mic.mic1State.registers["PC"], 1)
+    }
+
+    @Test
+    fun t2_RegisterEditing(){
+        val res = mic.loadMicroProgram(this
+            .javaClass
+            .classLoader
+            .getResource("resources/mal_examples/ex2.mic1"))
+        res?.let{println(res)}
+        assert(res == null)
+        repeat(10){
+            mic.run()
+        }
+        assertEquals(mic.mic1State.registers["PC"], 1)
+        assertEquals(mic.mic1State.registers["CPP"], 1)
+        assertEquals(mic.mic1State.registers["LV"], 3)
     }
 }

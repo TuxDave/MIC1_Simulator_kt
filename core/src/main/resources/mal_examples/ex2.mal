@@ -1,0 +1,9 @@
+.label l1 0x0
+.default goto fine
+
+l1  PC = 1
+    CPP = 1
+    H = PC
+    LV = CPP + H + 1
+
+fine goto fine
