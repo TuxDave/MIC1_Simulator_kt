@@ -114,7 +114,7 @@ class T_Mic1 {
         res?.let{println(res)}
         assert(res == null)
         mic.setRegisterValue(RegNames.TOS, 0x100*4 + 1)
-        mic.setMemoryValueFromCellNumber(0x100, 0x00EEEE00)
+        mic.setMemoryValueFromCellNumber(0x100, 0x00EE0000)
         repeat(10){
             mic.run()
         }
