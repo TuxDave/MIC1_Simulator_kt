@@ -25,7 +25,7 @@ class ALU(
             26 -> av.inv()
             44 -> bv?.inv()
             60 -> av.plus(bv ?: 0)
-            61 -> av.plus(bv ?: 0)?.plus(1)
+            61 -> av.plus(bv ?: 0).plus(1)
             57 -> av.plus(1)
             53 -> bv?.plus(1)
             63 -> bv?.minus(av)
@@ -53,6 +53,7 @@ val B_REGISTER_BUS: Array<RegNames> = arrayOf(
     RegNames.MDR,
     RegNames.PC,
     RegNames.MBR,
+    RegNames.MBRU,
     RegNames.SP,
     RegNames.LV,
     RegNames.CPP,

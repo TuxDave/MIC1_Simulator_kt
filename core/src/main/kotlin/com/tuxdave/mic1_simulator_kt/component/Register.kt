@@ -26,8 +26,7 @@ class Register8U(private val register8: Register8): Register<UByte>(){
     override var value: UByte = 0u
     override var output: UByte
         get() {
-            register8.outputEnabled = true
-            return register8.getValueOutput()!!.toUByte()
+            return register8.output.toUByte()
         }
         set(value) {}
 }

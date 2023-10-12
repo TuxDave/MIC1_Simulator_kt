@@ -1,5 +1,7 @@
 package com.tuxdave.mic1_simulator_kt.component.legacy
 
+import com.tuxdave.mic1_simulator_kt.component.Register8U
+
 interface Source<T> {
     var outputEnabled: Boolean
     var output: T
@@ -14,4 +16,13 @@ interface Source<T> {
 /**
  * @return only the value of the first register enabled
  */
-fun List<Source<Number>>.getOutputValue(): Number? = this.firstOrNull { it.outputEnabled }?.getValueOutput()?.toInt()
+fun List<Source<Number>>.getOutputValue(): Int? {
+    val temp = this.firstOrNull { it.outputEnabled }
+    return try {
+        temp?.getValueOutput()?.toInt()
+    } catch (e: ClassCastException) {
+        val temp = (temp as? Register8U)
+        temp?.outputEnabled = true
+        return temp?.getValueOutput()?.toInt()
+    }
+}

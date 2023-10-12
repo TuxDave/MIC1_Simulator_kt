@@ -1,0 +1,9 @@
+.label l1 0x0
+.default goto fine
+
+l1  PC = TOS; fetch
+    goto l3
+l3  TOS = MBRU
+    OPC = MBR
+
+fine goto fine

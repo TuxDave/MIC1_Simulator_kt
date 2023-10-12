@@ -1,0 +1,8 @@
+.label l1 0x0
+.default goto fine
+
+l1  MAR = TOS; rd
+    goto l3
+l3  TOS = MDR
+
+fine goto fine

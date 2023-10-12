@@ -74,7 +74,7 @@ class T_Mic1 {
     }
 
     @Test
-    fun t3_RAM(){
+    fun t3_RAM_WRITE(){
         val res = mic.loadMicroProgram(this
             .javaClass
             .classLoader
@@ -87,5 +87,38 @@ class T_Mic1 {
             mic.run()
         }
         assertContentEquals(mic.getMic1MemoryRange(0x8000..0x8004), IntArray(5) {0x8000 + it})
+    }
+
+    @Test
+    fun t4_RAM_READ(){
+        val res = mic.loadMicroProgram(this
+            .javaClass
+            .classLoader
+            .getResource("resources/mal_examples/ex4.mic1"))
+        res?.let{println(res)}
+        assert(res == null)
+        mic.setRegisterValue(RegNames.TOS, 0x100)
+        mic.setMemoryValueFromCellNumber(0x100, 1234)
+        repeat(10){
+            mic.run()
+        }
+        assertEquals(mic.mic1State.registers["TOS"], 1234)
+    }
+
+    @Test
+    fun t5_RAM_FETCH(){
+        val res = mic.loadMicroProgram(this
+            .javaClass
+            .classLoader
+            .getResource("resources/mal_examples/ex5.mic1"))
+        res?.let{println(res)}
+        assert(res == null)
+        mic.setRegisterValue(RegNames.TOS, 0x100*4 + 1)
+        mic.setMemoryValueFromCellNumber(0x100, 0x00EEEE00)
+        repeat(10){
+            mic.run()
+        }
+        assertEquals(mic.mic1State.registers["TOS"], 0xEE.toUByte().toInt())
+        assertEquals(mic.mic1State.registers["OPC"], 0xEE.toByte().toInt())
     }
 }
