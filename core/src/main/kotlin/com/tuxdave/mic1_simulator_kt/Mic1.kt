@@ -88,6 +88,11 @@ class Mic1: ClockBasedComponent(){
                 }
             }
         }
+
+        run {
+            val wrf = mir[MirRange.MEM]
+            memory4GB.wrfSignal = wrf
+        }
     }
 
     private fun jump() {
@@ -119,7 +124,7 @@ class Mic1: ClockBasedComponent(){
     * I primi 36 bit compongono l'istruzione, i successivi 4 (ultima cifra hex dell'ultimo byte) sono a 0 e "spezzano"
     * */
     /**
-     * @return: null if OK, the String error if not loader
+     * @return: null if OK, the String error if not loaded
      * */
     fun loadMicroProgram(dotMic1: URL?): String? {
         if (dotMic1 === null) return "Impossibile aprire il file: il riferimento è nullo..."

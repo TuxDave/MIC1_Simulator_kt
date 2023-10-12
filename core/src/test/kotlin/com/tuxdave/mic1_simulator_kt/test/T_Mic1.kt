@@ -1,6 +1,7 @@
 package com.tuxdave.mic1_simulator_kt.test
 
 import com.tuxdave.mic1_simulator_kt.Mic1
+import com.tuxdave.mic1_simulator_kt.component.RegNames
 import com.tuxdave.mic1_simulator_kt.toInt
 import com.tuxdave.mic1_simulator_kt.toLong
 import org.junit.FixMethodOrder
@@ -10,6 +11,7 @@ import java.net.URI
 import java.net.URL
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -69,5 +71,21 @@ class T_Mic1 {
         assertEquals(mic.mic1State.registers["PC"], 1)
         assertEquals(mic.mic1State.registers["CPP"], 1)
         assertEquals(mic.mic1State.registers["LV"], 3)
+    }
+
+    @Test
+    fun t3_RAM(){
+        val res = mic.loadMicroProgram(this
+            .javaClass
+            .classLoader
+            .getResource("resources/mal_examples/ex3.mic1"))
+        res?.let{println(res)}
+        assert(res == null)
+        mic.setRegisterValue(RegNames.TOS, 0x8000)
+        mic.setRegisterValue(RegNames.PC, 0x5)
+        repeat(100){
+            mic.run()
+        }
+        assertContentEquals(mic.getMic1MemoryRange(0x8000..0x8004), IntArray(5) {0x8000 + it})
     }
 }

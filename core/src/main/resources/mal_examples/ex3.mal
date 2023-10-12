@@ -1,0 +1,11 @@
+.label l1 0x0
+.default goto fine
+
+l1  H = TOS - 1
+l2  H = H + 1
+    PC = PC - 1
+    MAR = H
+    MDR = H; wr
+    Z = PC; if(Z) goto fine; else goto l2
+
+fine goto fine
