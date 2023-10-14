@@ -1,0 +1,8 @@
+.label l1 0x0
+.default goto fine
+
+l1  TOS = TOS << 8
+    TOS = TOS >> 1
+    TOS = TOS >> 1
+
+fine goto fine

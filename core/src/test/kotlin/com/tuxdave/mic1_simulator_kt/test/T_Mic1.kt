@@ -25,7 +25,6 @@ class T_Mic1 {
     @Test
     fun t0_tryLoad(){
         val res = mic.loadMicroProgram(this.javaClass.classLoader.getResource("resources/ijvm_std_interpreter.mic1"))
-//        val res = mic.loadMicroProgram(File("/home/tuxdave/Programmi/mic1simAA1314/mal/mic1ijvm.mic1").toURI().toURL())
         res?.let{println(res)}
         assert(res == null)
         assertEquals(mic.mic1ControlStoreState[0].sliceArray(0..7).toInt(), 0x01)
@@ -33,9 +32,6 @@ class T_Mic1 {
         assertEquals(mic.mic1ControlStoreState[2].sliceArray(0 .. 7).toInt(), 0x00)
         assertEquals(mic.mic1ControlStoreState[2].sliceArray(8 until 16).toInt(), 0x43)
         assertEquals(mic.mic1ControlStoreState[6].sliceArray(0 .. 7).toInt(), 0x01)
-//        assertEquals(mic.mic1ControlStoreState[6].sliceArray(16 until 24).toInt(), 0xF2)
-
-//        assertEquals((mic.mic1ControlStoreState[0x13] + BooleanArray(4)).toLong(), 0x1393502110)
         assertEquals(mic.mic1ControlStoreState[0x13].sliceArray(0..7).toInt(), 0x13)
         assertEquals(mic.mic1ControlStoreState[0x13].sliceArray(8 until 16).toInt(), 0x83)
         assertEquals(mic.mic1ControlStoreState[0x13].sliceArray(16 until 24).toInt(), 0x50)
@@ -120,5 +116,20 @@ class T_Mic1 {
         }
         assertEquals(mic.mic1State.registers["TOS"], 0xEE.toUByte().toInt())
         assertEquals(mic.mic1State.registers["OPC"], 0xEE.toByte().toInt())
+    }
+
+    @Test
+    fun t6_shift() {
+        val res = mic.loadMicroProgram(this
+            .javaClass
+            .classLoader
+            .getResource("resources/mal_examples/ex6.mic1"))
+        res?.let{println(res)}
+        assert(res == null)
+        mic.setRegisterValue(RegNames.TOS, 4)
+        repeat(5) {
+            mic.run()
+        }
+        assertEquals(mic.mic1State.registers["TOS"], 256)
     }
 }
