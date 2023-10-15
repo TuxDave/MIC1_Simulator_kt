@@ -1,6 +1,6 @@
-package com.tuxdave.mic1_simulator_kt.component.legacy
+package com.tuxdave.mic1_simulator_kt.core.component.legacy
 
-import com.tuxdave.mic1_simulator_kt.component.Register8U
+import com.tuxdave.mic1_simulator_kt.core.component.Register8U
 
 interface Source<T> {
     var outputEnabled: Boolean

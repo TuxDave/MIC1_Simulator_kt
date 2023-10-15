@@ -1,8 +1,8 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.Memory4GB
-import com.tuxdave.mic1_simulator_kt.component.Register32
-import com.tuxdave.mic1_simulator_kt.component.Register8
+import com.tuxdave.mic1_simulator_kt.core.component.Memory4GB
+import com.tuxdave.mic1_simulator_kt.core.component.Register32
+import com.tuxdave.mic1_simulator_kt.core.component.Register8
 import org.junit.FixMethodOrder
 import org.junit.runners.MethodSorters
 import kotlin.reflect.full.declaredFunctions

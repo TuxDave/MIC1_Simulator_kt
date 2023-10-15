@@ -1,6 +1,6 @@
-package com.tuxdave.mic1_simulator_kt.component
+package com.tuxdave.mic1_simulator_kt.core.component
 
-import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.ClockBasedComponent
 import kotlin.math.pow
 
 class Memory4GB(

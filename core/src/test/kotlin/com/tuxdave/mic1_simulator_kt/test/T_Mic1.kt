@@ -1,14 +1,10 @@
 package com.tuxdave.mic1_simulator_kt.test
 
-import com.tuxdave.mic1_simulator_kt.Mic1
-import com.tuxdave.mic1_simulator_kt.component.RegNames
-import com.tuxdave.mic1_simulator_kt.toInt
-import com.tuxdave.mic1_simulator_kt.toLong
+import com.tuxdave.mic1_simulator_kt.core.Mic1
+import com.tuxdave.mic1_simulator_kt.core.component.RegNames
+import com.tuxdave.mic1_simulator_kt.core.toInt
 import org.junit.FixMethodOrder
 import org.junit.runners.MethodSorters
-import java.io.File
-import java.net.URI
-import java.net.URL
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

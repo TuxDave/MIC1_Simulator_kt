@@ -1,7 +1,7 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.Register32
-import com.tuxdave.mic1_simulator_kt.component.Shifter
+import com.tuxdave.mic1_simulator_kt.core.component.Register32
+import com.tuxdave.mic1_simulator_kt.core.component.Shifter
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

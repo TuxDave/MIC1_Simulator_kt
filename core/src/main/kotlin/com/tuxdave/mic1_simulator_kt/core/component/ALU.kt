@@ -1,9 +1,9 @@
-package com.tuxdave.mic1_simulator_kt.component
+package com.tuxdave.mic1_simulator_kt.core.component
 
-import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
-import com.tuxdave.mic1_simulator_kt.component.legacy.Source
-import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
-import com.tuxdave.mic1_simulator_kt.toInt
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.ClockBasedComponent
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.getOutputValue
+import com.tuxdave.mic1_simulator_kt.core.toInt
 
 class ALU(
     private var a: Source<Int>,

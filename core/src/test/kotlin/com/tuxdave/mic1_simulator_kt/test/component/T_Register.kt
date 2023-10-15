@@ -1,8 +1,8 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.Register32
-import com.tuxdave.mic1_simulator_kt.component.Register8
-import com.tuxdave.mic1_simulator_kt.component.Register8U
+import com.tuxdave.mic1_simulator_kt.core.component.Register32
+import com.tuxdave.mic1_simulator_kt.core.component.Register8
+import com.tuxdave.mic1_simulator_kt.core.component.Register8U
 import junit.framework.TestCase.assertEquals
 import kotlin.test.BeforeTest
 import kotlin.test.Test

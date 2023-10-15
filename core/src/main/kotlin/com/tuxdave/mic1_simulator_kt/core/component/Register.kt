@@ -1,7 +1,7 @@
-package com.tuxdave.mic1_simulator_kt.component
+package com.tuxdave.mic1_simulator_kt.core.component
 
-import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
-import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Destination
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Source
 
 abstract class Register<T: Any> : Source<T>, Destination<T> {
     abstract var value: T

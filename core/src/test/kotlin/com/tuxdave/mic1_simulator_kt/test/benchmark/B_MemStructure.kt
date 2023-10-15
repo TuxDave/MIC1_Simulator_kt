@@ -1,9 +1,8 @@
 package com.tuxdave.mic1_simulator_kt.test.benchmark
 
-import com.tuxdave.mic1_simulator_kt.component.OptimizedRamStruct4GB
+import com.tuxdave.mic1_simulator_kt.core.component.OptimizedRamStruct4GB
 import org.junit.FixMethodOrder
 import org.junit.runners.MethodSorters
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

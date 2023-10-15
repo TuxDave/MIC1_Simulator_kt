@@ -16,7 +16,6 @@
         <kotlin.code.style>official</kotlin.code.style>
         <junit.version>4.13.1</junit.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <main.class>com.tuxdave.mic1_simulator_kt.HelloKt</main.class>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
     </properties>
 
@@ -73,31 +72,10 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals> <goal>single</goal> </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,13 +1,12 @@
-package com.tuxdave.mic1_simulator_kt
+package com.tuxdave.mic1_simulator_kt.core
 
-import com.tuxdave.mic1_simulator_kt.component.*
-import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
-import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
-import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.ClockBasedComponent
+import com.tuxdave.mic1_simulator_kt.core.component.*
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Destination
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Source
 import java.io.*
 import java.lang.IllegalArgumentException
 import java.net.URL
-import java.nio.CharBuffer
 import kotlin.ClassCastException
 
 /**
@@ -49,7 +48,7 @@ class Mic1: ClockBasedComponent(){
         registers += Pair(RegNames.MBRU, Register8U(registers[RegNames.MBR]!! as Register8) as Register<Number>)
 
         alu = ALU(
-            registers.getOrElse(RegNames.H) {Register32()} as Source<Int>,
+            registers.getOrElse(RegNames.H) { Register32() } as Source<Int>,
             registers.filter { it.key in B_REGISTER_BUS }.values.toList()
         )
 

@@ -1,8 +1,8 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.*
-import com.tuxdave.mic1_simulator_kt.component.legacy.Destination
-import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.core.component.*
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Destination
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Source
 import org.junit.Assert.assertNotEquals
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +24,7 @@ class T_OneToMoreBus {
     @Test
     fun t1() {
         val oneToMoreBus = OneToMoreBus(
-            from = registers.getOrElse(RegNames.H){Register32(0)} as Source<Int>,
+            from = registers.getOrElse(RegNames.H){ Register32(0) } as Source<Int>,
             to = registers.filter { it.key in B_REGISTER_BUS }.values.toList() as List<Destination<Int>>
         )
         registers.filter { it.key in listOf(RegNames.SP, RegNames.LV) }.values.forEach { it.inputEnabled = true }

@@ -1,4 +1,4 @@
-package com.tuxdave.mic1_simulator_kt.component
+package com.tuxdave.mic1_simulator_kt.core.component
 
 enum class MirRange private constructor(val bitRange: IntRange) {
     NEXT_ADDRESS(0 until 9),

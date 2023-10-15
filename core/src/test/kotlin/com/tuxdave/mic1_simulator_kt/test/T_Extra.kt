@@ -1,6 +1,6 @@
 package com.tuxdave.mic1_simulator_kt.test
 
-import com.tuxdave.mic1_simulator_kt.toBooleanArray
+import com.tuxdave.mic1_simulator_kt.core.toBooleanArray
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 

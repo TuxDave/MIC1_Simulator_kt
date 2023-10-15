@@ -1,7 +1,7 @@
-package com.tuxdave.mic1_simulator_kt.component
+package com.tuxdave.mic1_simulator_kt.core.component
 
-import com.tuxdave.mic1_simulator_kt.component.legacy.ClockBasedComponent
-import com.tuxdave.mic1_simulator_kt.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.ClockBasedComponent
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Source
 
 /**
  * for each clock if shiftLeft assigned will shift left or right, else it will be automatically null and will not shift

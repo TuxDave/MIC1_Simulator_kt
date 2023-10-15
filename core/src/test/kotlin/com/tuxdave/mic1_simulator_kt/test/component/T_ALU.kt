@@ -1,10 +1,13 @@
 package com.tuxdave.mic1_simulator_kt.test.component
 
-import com.tuxdave.mic1_simulator_kt.component.*
-import com.tuxdave.mic1_simulator_kt.component.legacy.Source
-import com.tuxdave.mic1_simulator_kt.component.legacy.getOutputValue
-import com.tuxdave.mic1_simulator_kt.toBooleanArray
-import com.tuxdave.mic1_simulator_kt.toInt
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.Source
+import com.tuxdave.mic1_simulator_kt.core.component.legacy.getOutputValue
+import com.tuxdave.mic1_simulator_kt.core.component.ALU
+import com.tuxdave.mic1_simulator_kt.core.component.Register
+import com.tuxdave.mic1_simulator_kt.core.component.Register32
+import com.tuxdave.mic1_simulator_kt.core.component.Register8
+import com.tuxdave.mic1_simulator_kt.core.toBooleanArray
+import com.tuxdave.mic1_simulator_kt.core.toInt
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

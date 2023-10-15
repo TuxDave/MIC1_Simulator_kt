@@ -1,6 +1,4 @@
-package com.tuxdave.mic1_simulator_kt
-
-import kotlin.math.pow
+package com.tuxdave.mic1_simulator_kt.core
 
 /**
  * @return the rightest length'th bits of the number, fill with false at left if empty
