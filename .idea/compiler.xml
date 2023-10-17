@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ui" />
         <module name="core" />
+        <module name="simulator-gui" />
       </profile>
     </annotationProcessing>
   </component>
