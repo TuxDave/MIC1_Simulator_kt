@@ -6,6 +6,7 @@ import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.control.Alert
+import javafx.scene.control.Spinner
 import javafx.scene.control.TextField
 import javafx.stage.Stage
 import kotlin.system.exitProcess
@@ -34,6 +35,9 @@ class MainController(
         mpcTF.text = state.mpc.toString()
     }
 
+    //TODO: Configurare Spinner
+    //TODO: Fare modifica/aggiornamento dei registri
+
     @FXML lateinit var marTF: TextField
     @FXML lateinit var mdrTF: TextField
     @FXML lateinit var pcTF: TextField
@@ -47,6 +51,7 @@ class MainController(
     @FXML lateinit var mirTF: TextField
     @FXML lateinit var nextMirTF: TextField
     @FXML lateinit var mpcTF: TextField
+    @FXML lateinit var waitSpinner: Spinner<Int>
 
     @FXML
     fun reset(): Unit  {

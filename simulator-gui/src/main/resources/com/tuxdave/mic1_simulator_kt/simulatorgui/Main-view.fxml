@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="738.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuxdave.mic1_simulator_kt.simulatorgui.MainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="738.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuxdave.mic1_simulator_kt.simulatorgui.MainController">
     <children>
         <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="1070.0">
             <menus>
@@ -39,7 +39,7 @@
         <TabPane>
             <tabs>
                 <Tab closable="false" text="Mic1">
-                    <HBox VBox.vgrow="ALWAYS">
+                    <HBox prefHeight="436.0" prefWidth="738.0" VBox.vgrow="ALWAYS">
                         <padding>
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </padding>
@@ -138,5 +138,20 @@
                 </Tab>
             </tabs>
         </TabPane>
+      <HBox prefHeight="34.0" prefWidth="738.0" spacing="3.0">
+         <children>
+            <Button mnemonicParsing="false" prefWidth="120.0" text="Run" />
+            <Spinner fx:id="waitSpinner" editable="true" prefHeight="26.0" prefWidth="116.0" />
+            <Button mnemonicParsing="false" prefWidth="120.0" text="Stop" />
+            <Separator prefWidth="100.0" visible="false" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" prefWidth="120.0" text="Micro Step" />
+            <Button mnemonicParsing="false" prefWidth="120.0" text="Macro Step" />
+            <Separator prefWidth="200.0" visible="false" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" prefWidth="120.0" text="Reset" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+      </HBox>
     </children>
 </VBox>
