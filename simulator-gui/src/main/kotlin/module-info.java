@@ -7,4 +7,5 @@ module com.tuxdave.mic1_simulator_kt.simulatorgui {
 
     opens com.tuxdave.mic1_simulator_kt.simulatorgui to javafx.fxml;
     exports com.tuxdave.mic1_simulator_kt.simulatorgui;
+    exports com.tuxdave.mic1_simulator_kt.simulatorgui.help;
 }

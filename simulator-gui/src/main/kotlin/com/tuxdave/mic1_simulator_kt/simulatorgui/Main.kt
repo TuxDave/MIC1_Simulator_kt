@@ -7,9 +7,9 @@ import javafx.stage.Stage
 
 class Main : Application() {
     override fun start(stage: Stage) {
-        val fxmlLoader = FXMLLoader(Main::class.java.getResource("hello-view.fxml"))
+        val fxmlLoader = FXMLLoader(Main::class.java.getResource("Main-view.fxml"))
         val scene = Scene(fxmlLoader.load())
-        stage.title = "Hello!"
+        stage.title = "Mic1 Simulator"
         stage.scene = scene
         stage.sizeToScene()
         stage.isResizable = false
