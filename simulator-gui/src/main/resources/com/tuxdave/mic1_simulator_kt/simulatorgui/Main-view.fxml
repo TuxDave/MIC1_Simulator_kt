@@ -1,28 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="977.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuxdave.mic1_simulator_kt.simulatorgui.MainController">
-   <children>
-      <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="1070.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#todo" text="Reset" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </children>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="977.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="1070.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#reset" text="Reset" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                    <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#todo" selected="true" text="Mic1">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="view_mode" />
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#todo" text="IJVM" toggleGroup="$view_mode" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <TabPane>
+            <tabs>
+                <Tab closable="false" text="Mic1">
+                    <HBox VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                        <VBox prefWidth="300.0">
+                            <Label style="-fx-font-weight: bold;" text="Registers:" />
+                            <Separator orientation="VERTICAL" prefHeight="25.0" visible="false" />
+                            <HBox>
+                                <Label text="MAR" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="marTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="MDR" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="mdrTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="PC" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="pcTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="MBR" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="mbrTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="SP" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="spTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="LV" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="lvTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="CPP" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="cppTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="TOS" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="tosTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="OPC" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="opcTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="H" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="hTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                        </VBox>
+                  <Separator orientation="VERTICAL" prefWidth="15.0" />
+                    </HBox>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
 </VBox>
