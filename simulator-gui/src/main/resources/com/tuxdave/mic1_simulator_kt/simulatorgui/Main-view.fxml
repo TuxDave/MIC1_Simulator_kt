@@ -3,8 +3,9 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="977.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="738.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuxdave.mic1_simulator_kt.simulatorgui.MainController">
     <children>
         <MenuBar layoutY="1.0" prefHeight="27.0" prefWidth="1070.0">
             <menus>
@@ -43,7 +44,7 @@
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </padding>
                         <VBox prefWidth="300.0">
-                            <Label style="-fx-font-weight: bold;" text="Registers:" />
+                            <Label style="-fx-font-weight: bold;" text="Registri:" />
                             <Separator orientation="VERTICAL" prefHeight="25.0" visible="false" />
                             <HBox>
                                 <Label text="MAR" />
@@ -105,7 +106,34 @@
                                 <TextField fx:id="hTF" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                         </VBox>
-                  <Separator orientation="VERTICAL" prefWidth="15.0" />
+                        <Separator orientation="VERTICAL" prefWidth="20.0" />
+                        <VBox HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-weight: bold;" text="Componenti:" />
+                            <Separator orientation="VERTICAL" prefHeight="25.0" visible="false" />
+                            <HBox>
+                                <Label text="MIR (Microistruzione)" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="mirTF" prefHeight="26.0" prefWidth="260.0" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="11.0" />
+                           </font></TextField>
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="Microistruzione Succ." />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="nextMirTF" prefHeight="26.0" prefWidth="260.0" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="11.0" />
+                           </font></TextField>
+                            </HBox>
+                            <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
+                            <HBox>
+                                <Label text="MPC" />
+                                <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="mpcTF" prefHeight="26.0" prefWidth="260.0" HBox.hgrow="NEVER" />
+                            </HBox>
+                        </VBox>
                     </HBox>
                 </Tab>
             </tabs>

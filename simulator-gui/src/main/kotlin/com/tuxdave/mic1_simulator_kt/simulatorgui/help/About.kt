@@ -4,6 +4,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.Scene
+import javafx.scene.control.TextArea
 import javafx.stage.Stage
 
 class About {
