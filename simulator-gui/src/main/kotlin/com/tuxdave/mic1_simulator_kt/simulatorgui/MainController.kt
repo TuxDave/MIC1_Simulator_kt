@@ -2,41 +2,28 @@ package com.tuxdave.mic1_simulator_kt.simulatorgui
 
 import com.tuxdave.mic1_simulator_kt.core.Mic1
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
+import javafx.collections.ListChangeListener.Change
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
+import javafx.fxml.Initializable
 import javafx.scene.Scene
-import javafx.scene.control.Alert
-import javafx.scene.control.Spinner
-import javafx.scene.control.TextField
+import javafx.scene.control.*
+import javafx.scene.input.KeyEvent
 import javafx.stage.Stage
+import java.net.URL
+import java.sql.Time
+import java.util.*
+import java.util.function.UnaryOperator
 import kotlin.system.exitProcess
 
 class MainController(
     private val mic1Getter: () -> Mic1 = {Mic1()},
     private val reset: () -> Unit = {}
-) {
+): Initializable {
     private val mic1: Mic1
         get() = mic1Getter()
 
-    fun updateUi(): Unit {
-        val state = mic1.mic1State
-        marTF.text = state.registers["MAR"]?.toString(16) ?: ""
-        mdrTF.text = state.registers["MDR"]?.toString(16) ?: ""
-        pcTF.text = state.registers["PC"]?.toString(16) ?: ""
-        mbrTF.text = state.registers["MBR"]?.toString(16) ?: ""
-        lvTF.text = state.registers["LV"]?.toString(16) ?: ""
-        spTF.text = state.registers["SP"]?.toString(16) ?: ""
-        opcTF.text = state.registers["OPC"]?.toString(16) ?: ""
-        tosTF.text = state.registers["TOS"]?.toString(16) ?: ""
-        cppTF.text = state.registers["CPP"]?.toString(16) ?: ""
-        hTF.text = state.registers["H"]?.toString(16) ?: ""
-        mirTF.text = state.mir.joinToString("") { if (it) "1" else "0" }
-        nextMirTF.text = "TODO"
-        mpcTF.text = state.mpc.toString()
-    }
-
-    //TODO: Configurare Spinner
-    //TODO: Fare modifica/aggiornamento dei registri
+    var numberBase: Int = 0
 
     @FXML lateinit var marTF: TextField
     @FXML lateinit var mdrTF: TextField
@@ -52,6 +39,56 @@ class MainController(
     @FXML lateinit var nextMirTF: TextField
     @FXML lateinit var mpcTF: TextField
     @FXML lateinit var waitSpinner: Spinner<Int>
+    @FXML lateinit var hexMenuRadio: RadioMenuItem
+    @FXML lateinit var decMenuRadio: RadioMenuItem
+
+    //TODO: Fare modifica/aggiornamento dei registri
+
+    override fun initialize(p0: URL?, p1: ResourceBundle?) {
+        waitSpinner.valueFactory = object : SpinnerValueFactory<Int>() {
+            override fun decrement(p0: Int) {
+                value = maxOf(value - 1, 0)
+            }
+
+            override fun increment(p0: Int) {
+                value++
+            }
+        }
+        waitSpinner.valueFactory.value = 0
+        changeNumberBase()
+
+        marTF.textFormatter = TextFormatter<String>{ change -> //TODO fix this doing it better and apply at all in functional
+            if(change.text.matches("[0-9a-fA-F]".toRegex())) change else null
+        }
+
+        //update registers
+
+        reset()
+    }
+
+    fun updateUi(): Unit {
+        val state = mic1.mic1State
+
+        fun Int.toStringg(radix: Int): String {
+            return if (this >= 0) this.toString(radix)
+                    else if (radix == 10) this.toString(10)
+                else Integer.toHexString(this)
+        }
+
+        marTF.text = state.registers["MAR"]?.toStringg(numberBase) ?: "NULL"
+        mdrTF.text = state.registers["MDR"]?.toStringg(numberBase) ?: "NULL"
+        pcTF.text = state.registers["PC"]?.toStringg(numberBase) ?: "NULL"
+        mbrTF.text = state.registers["MBR"]?.toStringg(numberBase) ?: "NULL"
+        lvTF.text = state.registers["LV"]?.toStringg(numberBase) ?: "NULL"
+        spTF.text = state.registers["SP"]?.toStringg(numberBase) ?: "NULL"
+        opcTF.text = state.registers["OPC"]?.toStringg(numberBase) ?: "NULL"
+        tosTF.text = state.registers["TOS"]?.toStringg(numberBase) ?: "NULL"
+        cppTF.text = state.registers["CPP"]?.toStringg(numberBase) ?: "NULL"
+        hTF.text = state.registers["H"]?.toStringg(numberBase) ?: "NULL"
+        mirTF.text = state.mir.joinToString("") { if (it) "1" else "0" }
+        nextMirTF.text = "TODO"
+        mpcTF.text = state.mpc.toString()
+    }
 
     @FXML
     fun reset(): Unit  {
@@ -84,4 +121,18 @@ class MainController(
         stage.isResizable = false
         stage.show()
     }
+
+    @FXML
+    fun changeNumberBase(): Unit {
+        numberBase = if (hexMenuRadio.isSelected) 16 else 10
+        reset()
+    }
+
+    @FXML
+    fun onRegisterKeyTyped(event: KeyEvent): Unit {
+        val tf = event.source as TextField
+        val char = event.character
+    }
 }
+
+private val HEX_CHARSET = arrayOf('0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f')
