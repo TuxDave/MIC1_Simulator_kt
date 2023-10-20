@@ -1,68 +1,106 @@
 package com.tuxdave.mic1_simulator_kt.simulatorgui
 
 import com.tuxdave.mic1_simulator_kt.core.Mic1
+import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
-import javafx.collections.ListChangeListener.Change
+import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
+import javafx.scene.input.InputMethodEvent
 import javafx.scene.input.KeyEvent
 import javafx.stage.Stage
 import java.net.URL
-import java.sql.Time
 import java.util.*
-import java.util.function.UnaryOperator
 import kotlin.system.exitProcess
 
 class MainController(
-    private val mic1Getter: () -> Mic1 = {Mic1()},
+    private val mic1Getter: () -> Mic1 = { Mic1() },
     private val reset: () -> Unit = {}
-): Initializable {
+) : Initializable {
     private val mic1: Mic1
         get() = mic1Getter()
 
     var numberBase: Int = 0
 
-    @FXML lateinit var marTF: TextField
-    @FXML lateinit var mdrTF: TextField
-    @FXML lateinit var pcTF: TextField
-    @FXML lateinit var mbrTF: TextField
-    @FXML lateinit var opcTF: TextField
-    @FXML lateinit var cppTF: TextField
-    @FXML lateinit var lvTF: TextField
-    @FXML lateinit var spTF: TextField
-    @FXML lateinit var tosTF: TextField
-    @FXML lateinit var hTF: TextField
-    @FXML lateinit var mirTF: TextField
-    @FXML lateinit var nextMirTF: TextField
-    @FXML lateinit var mpcTF: TextField
-    @FXML lateinit var waitSpinner: Spinner<Int>
-    @FXML lateinit var hexMenuRadio: RadioMenuItem
-    @FXML lateinit var decMenuRadio: RadioMenuItem
+    @FXML
+    lateinit var marTF: TextField
+    @FXML
+    lateinit var mdrTF: TextField
+    @FXML
+    lateinit var pcTF: TextField
+    @FXML
+    lateinit var mbrTF: TextField
+    @FXML
+    lateinit var opcTF: TextField
+    @FXML
+    lateinit var cppTF: TextField
+    @FXML
+    lateinit var lvTF: TextField
+    @FXML
+    lateinit var spTF: TextField
+    @FXML
+    lateinit var tosTF: TextField
+    @FXML
+    lateinit var hTF: TextField
+    @FXML
+    lateinit var mirTF: TextField
+    @FXML
+    lateinit var nextMirTF: TextField
+    @FXML
+    lateinit var mpcTF: TextField
+    @FXML
+    lateinit var waitSpinner: Spinner<Int>
+    @FXML
+    lateinit var hexMenuRadio: RadioMenuItem
+    @FXML
+    lateinit var decMenuRadio: RadioMenuItem
 
     //TODO: Fare modifica/aggiornamento dei registri
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
-        waitSpinner.valueFactory = object : SpinnerValueFactory<Int>() {
-            override fun decrement(p0: Int) {
-                value = maxOf(value - 1, 0)
-            }
-
-            override fun increment(p0: Int) {
-                value++
-            }
+        waitSpinner.valueFactory = IntegerSpinnerValueFactory(0,20,0,1)
+        waitSpinner.promptText = "sec"
+        waitSpinner.focusedProperty().addListener { _,_,f ->
+            if(!f && waitSpinner.valueFactory.value == null) waitSpinner.valueFactory.value = 0
         }
         waitSpinner.valueFactory.value = 0
         changeNumberBase()
 
-        marTF.textFormatter = TextFormatter<String>{ change -> //TODO fix this doing it better and apply at all in functional
-            if(change.text.matches("[0-9a-fA-F]".toRegex())) change else null
+        mapOf(
+            Pair(marTF, RegNames.MAR),
+            Pair(mdrTF,RegNames.MDR),
+            Pair(pcTF, RegNames.PC),
+            Pair(mbrTF,RegNames.MBR),
+            Pair(opcTF, RegNames.OPC),
+            Pair(cppTF, RegNames.CPP),
+            Pair(lvTF, RegNames.LV),
+            Pair(spTF, RegNames.SP),
+            Pair(tosTF, RegNames.TOS),
+            Pair(hTF, RegNames.H)
+        ).forEach {
+            val (it, value) = it
+            it.textProperty().addListener { _, old, new ->
+                if(numberBase == 16) {
+                    if (!new.matches("[0-9a-fA-F]{0,8}".toRegex())) {
+                        it.text = old ?: ""
+                    }
+                } else {
+                    if (!new.matches("-?[0-9]*".toRegex())) {
+                        it.text = old ?: ""
+                    }
+                }
+            }
+            it.focusedProperty().addListener { _, _, new ->
+                if (!new) {
+                    if (it.text == "") it.text = "0"
+                    mic1.setRegisterValue(value, Integer.parseInt(it.text, numberBase)) //TODO: Aggiustare che da il formato sbagliato
+                }
+            }
         }
-
-        //update registers
-
         reset()
     }
 
@@ -71,8 +109,8 @@ class MainController(
 
         fun Int.toStringg(radix: Int): String {
             return if (this >= 0) this.toString(radix)
-                    else if (radix == 10) this.toString(10)
-                else Integer.toHexString(this)
+            else if (radix == 10) this.toString(10)
+            else Integer.toHexString(this)
         }
 
         marTF.text = state.registers["MAR"]?.toStringg(numberBase) ?: "NULL"
@@ -91,7 +129,7 @@ class MainController(
     }
 
     @FXML
-    fun reset(): Unit  {
+    fun reset(): Unit {
         reset.invoke()
         updateUi()
     }
@@ -100,13 +138,14 @@ class MainController(
     fun close(): Unit {
         exitProcess(0)
     }
-    
+
     @FXML
     fun todo(): Unit {
         val alert = Alert(Alert.AlertType.INFORMATION)
         alert.title = "Non ancora implementato."
         alert.headerText = "Mi dispiace!"
-        alert.contentText = "La funzione selezionata non è ancora implementata...\nRiprova dopo un futuro aggiornamento."
+        alert.contentText =
+            "La funzione selezionata non è ancora implementata...\nRiprova dopo un futuro aggiornamento."
         alert.showAndWait()
     }
 
@@ -135,4 +174,4 @@ class MainController(
     }
 }
 
-private val HEX_CHARSET = arrayOf('0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f')
+private val HEX_CHARSET = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
