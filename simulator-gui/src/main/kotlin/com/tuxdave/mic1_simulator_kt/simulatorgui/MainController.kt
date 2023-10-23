@@ -59,8 +59,6 @@ class MainController(
     @FXML
     lateinit var decMenuRadio: RadioMenuItem
 
-    //TODO: Fare modifica/aggiornamento dei registri
-
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
         waitSpinner.valueFactory = IntegerSpinnerValueFactory(0,20,0,1)
         waitSpinner.promptText = "sec"
@@ -97,8 +95,13 @@ class MainController(
             it.focusedProperty().addListener { _, _, new ->
                 if (!new) {
                     if (it.text == "") it.text = "0"
-                    mic1.setRegisterValue(value, Integer.parseInt(it.text, numberBase)) //TODO: Aggiustare che da il formato sbagliato
+                    mic1.setRegisterValue(
+                        value,
+                        if (numberBase== 16) Integer.parseUnsignedInt(it.text, 16) else it.text.toInt()
+                    )
+                    println(mic1.mic1State.registers[value.toString()])
                 }
+                updateUi()
             }
         }
         reset()
@@ -164,14 +167,11 @@ class MainController(
     @FXML
     fun changeNumberBase(): Unit {
         numberBase = if (hexMenuRadio.isSelected) 16 else 10
-        reset()
+        updateUi()
     }
 
     @FXML
-    fun onRegisterKeyTyped(event: KeyEvent): Unit {
-        val tf = event.source as TextField
-        val char = event.character
+    fun onRegistryAction(): Unit {
+        nextMirTF.requestFocus()
     }
 }
-
-private val HEX_CHARSET = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
