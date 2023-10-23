@@ -11,7 +11,15 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="Esci" />
+                  <Menu mnemonicParsing="false" text="Apri...">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Microprogramma" />
+                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Microprogramma" />
+                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto MAL" />
+                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
+                     </items>
+                  </Menu>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -62,55 +70,55 @@
                             <HBox>
                                 <Label text="MDR" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="mdrTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="mdrTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="PC" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="pcTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="pcTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="MBR" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="mbrTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="mbrTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="SP" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="spTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="spTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="LV" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="lvTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="lvTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="CPP" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="cppTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="cppTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="TOS" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="tosTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="tosTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="OPC" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="opcTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="opcTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="H" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
-                                <TextField fx:id="hTF" onAction="#onRegistryAction"  prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
+                                <TextField fx:id="hTF" onAction="#onRegistryAction" prefHeight="26.0" prefWidth="140.0" HBox.hgrow="NEVER" />
                             </HBox>
                         </VBox>
                         <Separator orientation="VERTICAL" prefWidth="20.0" />
@@ -147,12 +155,12 @@
         </TabPane>
       <HBox prefHeight="34.0" prefWidth="738.0" spacing="3.0">
          <children>
-            <Button mnemonicParsing="false" prefWidth="140.0" text="Run" />
+            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Run" />
             <Spinner fx:id="waitSpinner" editable="true" prefHeight="26.0" prefWidth="116.0" />
-            <Button mnemonicParsing="false" prefWidth="140.0" text="Stop" />
+            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Stop" />
             <Separator prefWidth="100.0" visible="false" HBox.hgrow="NEVER" />
-            <Button mnemonicParsing="false" prefWidth="140.0" text="Micro Step" />
-            <Button mnemonicParsing="false" prefWidth="140.0" text="Macro Step" />
+            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Micro Step" />
+            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Macro Step" />
             <Separator prefWidth="200.0" visible="false" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#reset" prefWidth="140.0" text="Reset" />
          </children>
