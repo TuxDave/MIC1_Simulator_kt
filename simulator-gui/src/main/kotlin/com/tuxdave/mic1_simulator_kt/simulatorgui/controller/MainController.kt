@@ -1,10 +1,11 @@
-package com.tuxdave.mic1_simulator_kt.simulatorgui
+package com.tuxdave.mic1_simulator_kt.simulatorgui.controller
 
 import com.tuxdave.mic1_simulator_kt.core.Mic1
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
+import com.tuxdave.mic1_simulator_kt.simulatorgui.Runner
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
-import com.tuxdave.mic1_simulator_kt.simulatorgui.projects.Mic1Project
-import com.tuxdave.mic1_simulator_kt.simulatorgui.projects.ProjectListener
+import com.tuxdave.mic1_simulator_kt.simulatorgui.project.Mic1Project
+import com.tuxdave.mic1_simulator_kt.simulatorgui.project.ProjectListener
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
@@ -25,6 +26,8 @@ class MainController(
 ) : Initializable, ProjectListener {
     private val mic1: Mic1
         get() = mic1Getter()
+
+    private lateinit var runner: Runner
 
     private var numberBase: Int = 0
 
@@ -90,6 +93,11 @@ class MainController(
         waitSpinner.promptText = "sec"
         waitSpinner.focusedProperty().addListener { _, _, f ->
             if (!f && waitSpinner.valueFactory.value == null) waitSpinner.valueFactory.value = 0
+            if(!f) {
+                try {
+                    runner.waitTimeSeconds = waitSpinner.valueFactory.value
+                } catch (_: UninitializedPropertyAccessException){}
+            }
         }
         waitSpinner.valueFactory.value = 0
         changeNumberBase()
@@ -170,13 +178,14 @@ class MainController(
                 if (proj.hexNumberFormat) {
                     hexMenuRadio.isSelected = true
                 } else {
-                    hexMenuRadio.toggleGroup.toggles[1].isSelected = true
+                    decMenuRadio.isSelected = true
                 }
                 changeNumberBase()
                 mic1Tab.tabPane.selectionModel.select(mic1Tab)
             }
         }
 
+        stop()
         reset.invoke()
         if (mic1Project != null) {
             loadMic1Project(mic1Project!!)
@@ -233,8 +242,37 @@ class MainController(
     }
 
     @FXML
-    fun onRegistryAction(): Unit {
+    private fun onRegistryAction(): Unit {
         nextMirTF.requestFocus()
+    }
+
+    @FXML
+    private fun runMicroStep(): Unit{
+        mic1.run()
+        updateUi()
+    }
+
+    @FXML
+    fun start() {
+        if (mic1Project != null)
+            runner = Runner(waitSpinner.value) {
+                runMicroStep()
+            }
+        else if (ijvmProject != null) {//TODO: Crea il runner
+        }else return
+        runner.running = true
+        runner.start()
+
+        runButton.isDisable = true
+        stopButton.isDisable = false
+    }
+
+    fun stop(): Unit {
+        try{
+            runner.running = false
+            runButton.isDisable = false
+            stopButton.isDisable = true
+        } catch (_: UninitializedPropertyAccessException) {}
     }
 
     @FXML
@@ -255,13 +293,15 @@ class MainController(
     override fun mic1ProjectChanged(proj: Mic1Project?) {
         proj?.let {
             runButton.isDisable = false
-            stopButton.isDisable = false
+            stopButton.isDisable = true
             microStepButton.isDisable = false
             macroStepButton.isDisable = true
         }
+        super.mic1ProjectChanged(proj)
     }
 
-    override fun ijvmProjectChanged() {
+    override fun ijvmProjectChanged(proj: Any?) {
         TODO("Not yet implemented")
+        super.ijvmProjectChanged(proj)
     }
 }

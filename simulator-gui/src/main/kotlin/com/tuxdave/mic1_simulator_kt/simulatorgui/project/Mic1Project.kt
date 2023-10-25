@@ -1,9 +1,8 @@
-package com.tuxdave.mic1_simulator_kt.simulatorgui.projects
+package com.tuxdave.mic1_simulator_kt.simulatorgui.project
 
 import com.tuxdave.mic1_simulator_kt.core.Mic1
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import kotlinx.serialization.Serializable
-import java.io.File
 
 @Serializable
 data class Mic1Project(
