@@ -20,6 +20,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
                      </items>
                   </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#closeProject" text="Chiudi Progetto" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -53,7 +54,7 @@
         </MenuBar>
         <TabPane>
             <tabs>
-                <Tab closable="false" text="Mic1">
+                <Tab fx:id="mic1Tab" closable="false" text="Mic1">
                     <HBox prefHeight="436.0" prefWidth="738.0" VBox.vgrow="ALWAYS">
                         <padding>
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -155,12 +156,12 @@
         </TabPane>
       <HBox prefHeight="34.0" prefWidth="738.0" spacing="3.0">
          <children>
-            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Run" />
+            <Button fx:id="runButton" disable="true" mnemonicParsing="false" prefWidth="140.0" text="Run" />
             <Spinner fx:id="waitSpinner" editable="true" prefHeight="26.0" prefWidth="116.0" />
-            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Stop" />
+            <Button fx:id="stopButton" disable="true" mnemonicParsing="false" prefWidth="140.0" text="Stop" />
             <Separator prefWidth="100.0" visible="false" HBox.hgrow="NEVER" />
-            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Micro Step" />
-            <Button disable="true" mnemonicParsing="false" prefWidth="140.0" text="Macro Step" />
+            <Button fx:id="microStepButton" disable="true" mnemonicParsing="false" prefWidth="140.0" text="Micro Step" />
+            <Button fx:id="macroStepButton" disable="true" mnemonicParsing="false" prefWidth="140.0" text="Macro Step" />
             <Separator prefWidth="200.0" visible="false" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#reset" prefWidth="140.0" text="Reset" />
          </children>

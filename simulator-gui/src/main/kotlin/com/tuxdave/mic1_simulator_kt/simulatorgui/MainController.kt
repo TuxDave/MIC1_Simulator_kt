@@ -4,15 +4,13 @@ import com.tuxdave.mic1_simulator_kt.core.Mic1
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
 import com.tuxdave.mic1_simulator_kt.simulatorgui.projects.Mic1Project
-import javafx.event.EventHandler
+import com.tuxdave.mic1_simulator_kt.simulatorgui.projects.ProjectListener
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
-import javafx.scene.input.InputMethodEvent
-import javafx.scene.input.KeyEvent
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
@@ -24,31 +22,68 @@ import kotlin.system.exitProcess
 class MainController(
     private val mic1Getter: () -> Mic1 = { Mic1() },
     private val reset: () -> Unit = {}
-) : Initializable {
+) : Initializable, ProjectListener {
     private val mic1: Mic1
         get() = mic1Getter()
 
     private var numberBase: Int = 0
 
     private var mic1Project: Mic1Project? = null
+        set(value) {
+            field = value
+            projectListeners.forEach {it.mic1ProjectChanged(field)}
+        }
     private var ijvmProject: Any? = null
+        set(value) {
+            field = value
+            //TODO: Call listeners
+        }
+    private val projectListeners: MutableList<ProjectListener> = mutableListOf()
 
-    @FXML lateinit var marTF: TextField
-    @FXML lateinit var mdrTF: TextField
-    @FXML lateinit var pcTF: TextField
-    @FXML lateinit var mbrTF: TextField
-    @FXML lateinit var opcTF: TextField
-    @FXML lateinit var cppTF: TextField
-    @FXML lateinit var lvTF: TextField
-    @FXML lateinit var spTF: TextField
-    @FXML lateinit var tosTF: TextField
-    @FXML lateinit var hTF: TextField
-    @FXML lateinit var mirTF: TextField
-    @FXML lateinit var nextMirTF: TextField
-    @FXML lateinit var mpcTF: TextField
-    @FXML lateinit var waitSpinner: Spinner<Int>
-    @FXML lateinit var hexMenuRadio: RadioMenuItem
-    @FXML lateinit var decMenuRadio: RadioMenuItem
+    @FXML
+    lateinit var mic1Tab: Tab
+
+    @FXML
+    lateinit var runButton: Button
+    @FXML
+    lateinit var stopButton: Button
+    @FXML
+    lateinit var microStepButton: Button
+    @FXML
+    lateinit var macroStepButton: Button
+
+    @FXML
+    lateinit var marTF: TextField
+    @FXML
+    lateinit var mdrTF: TextField
+    @FXML
+    lateinit var pcTF: TextField
+    @FXML
+    lateinit var mbrTF: TextField
+    @FXML
+    lateinit var opcTF: TextField
+    @FXML
+    lateinit var cppTF: TextField
+    @FXML
+    lateinit var lvTF: TextField
+    @FXML
+    lateinit var spTF: TextField
+    @FXML
+    lateinit var tosTF: TextField
+    @FXML
+    lateinit var hTF: TextField
+    @FXML
+    lateinit var mirTF: TextField
+    @FXML
+    lateinit var nextMirTF: TextField
+    @FXML
+    lateinit var mpcTF: TextField
+    @FXML
+    lateinit var waitSpinner: Spinner<Int>
+    @FXML
+    lateinit var hexMenuRadio: RadioMenuItem
+    @FXML
+    lateinit var decMenuRadio: RadioMenuItem
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
         waitSpinner.valueFactory = IntegerSpinnerValueFactory(0, 20, 0, 1)
@@ -95,6 +130,7 @@ class MainController(
                 updateUi()
             }
         }
+        projectListeners.add(this)
         reset()
     }
 
@@ -122,28 +158,45 @@ class MainController(
         mpcTF.text = state.mpc.toString()
     }
 
-    private fun loadMic1Project(proj: Mic1Project): Unit {
-        //TODO: Pensarci bene che c'era casino e non riuscivo
-        ijvmProject = null
-        reset()
-        proj.relExecPath?.let{
-            mic1.loadMicroProgram(File(it).toURI().toURL())
-            proj.startValues.forEach { (regNames, value) ->
-                mic1.setRegisterValue(regNames, value)
+    @FXML
+    fun reset(): Unit {
+        fun loadMic1Project(proj: Mic1Project): Unit {
+            ijvmProject = null
+            proj.relExecPath?.let {
+                mic1.loadMicroProgram(File(it).toURI().toURL())
+                proj.startValues.forEach { (regNames, value) ->
+                    mic1.setRegisterValue(regNames, value)
+                }
+                if (proj.hexNumberFormat) {
+                    hexMenuRadio.isSelected = true
+                } else {
+                    hexMenuRadio.toggleGroup.toggles[1].isSelected = true
+                }
+                changeNumberBase()
+                mic1Tab.tabPane.selectionModel.select(mic1Tab)
             }
-            if(proj.hexNumberFormat) {
-                hexMenuRadio.isSelected = true
-            }else {
-                hexMenuRadio.toggleGroup.toggles[1].isSelected = true
-            }
-            changeNumberBase()
         }
+
+        reset.invoke()
+        if (mic1Project != null) {
+            loadMic1Project(mic1Project!!)
+        } else if (false) {
+            //TODO: Load ijvmProject
+            //Todo: Load ijvmProject}
+        } else {
+            runButton.isDisable = true
+            stopButton.isDisable = true
+            microStepButton.isDisable = true
+            macroStepButton.isDisable = true
+        }
+        updateUi()
     }
 
     @FXML
-    fun reset(): Unit {
-        reset.invoke()
-        updateUi()
+    fun closeProject(): Unit {
+        mic1Project = null
+        //TODO: close ijvmProject
+        reset()
     }
 
     @FXML
@@ -183,7 +236,7 @@ class MainController(
     fun onRegistryAction(): Unit {
         nextMirTF.requestFocus()
     }
-    
+
     @FXML
     fun openMicroprogram(): Unit {
         val fc = FileChooser()
@@ -192,9 +245,23 @@ class MainController(
         fc.initialDirectory = File(System.getProperty("user.home"))
         val file: File? = fc.showOpenDialog(null)
         file?.let {
-            loadMic1Project(Mic1Project(
+            mic1Project = Mic1Project(
                 relExecPath = it.toRelativeString(File(".").canonicalFile)
-            ))
+            )
+            reset()
         }
+    }
+
+    override fun mic1ProjectChanged(proj: Mic1Project?) {
+        proj?.let {
+            runButton.isDisable = false
+            stopButton.isDisable = false
+            microStepButton.isDisable = false
+            macroStepButton.isDisable = true
+        }
+    }
+
+    override fun ijvmProjectChanged() {
+        TODO("Not yet implemented")
     }
 }
