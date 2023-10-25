@@ -162,7 +162,7 @@ class MainController(
         cppTF.text = state.registers["CPP"]?.toStringg(numberBase) ?: "NULL"
         hTF.text = state.registers["H"]?.toStringg(numberBase) ?: "NULL"
         mirTF.text = state.mir.joinToString("") { if (it) "1" else "0" }
-        nextMirTF.text = "TODO"
+        nextMirTF.text = mic1.mic1ControlStoreState[state.mpc].joinToString("") {if (it) "1" else "0"}
         mpcTF.text = state.mpc.toString()
     }
 
