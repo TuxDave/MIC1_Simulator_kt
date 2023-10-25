@@ -3,6 +3,7 @@ package com.tuxdave.mic1_simulator_kt.simulatorgui
 import com.tuxdave.mic1_simulator_kt.core.Mic1
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
+import com.tuxdave.mic1_simulator_kt.simulatorgui.projects.Mic1Project
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -12,7 +13,10 @@ import javafx.scene.control.*
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
 import javafx.scene.input.InputMethodEvent
 import javafx.scene.input.KeyEvent
+import javafx.stage.FileChooser
+import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
+import java.io.File
 import java.net.URL
 import java.util.*
 import kotlin.system.exitProcess
@@ -24,7 +28,10 @@ class MainController(
     private val mic1: Mic1
         get() = mic1Getter()
 
-    var numberBase: Int = 0
+    private var numberBase: Int = 0
+
+    private var mic1Project: Mic1Project? = null
+    private var ijvmProject: Any? = null
 
     @FXML lateinit var marTF: TextField
     @FXML lateinit var mdrTF: TextField
@@ -115,6 +122,24 @@ class MainController(
         mpcTF.text = state.mpc.toString()
     }
 
+    private fun loadMic1Project(proj: Mic1Project): Unit {
+        //TODO: Pensarci bene che c'era casino e non riuscivo
+        ijvmProject = null
+        reset()
+        proj.relExecPath?.let{
+            mic1.loadMicroProgram(File(it).toURI().toURL())
+            proj.startValues.forEach { (regNames, value) ->
+                mic1.setRegisterValue(regNames, value)
+            }
+            if(proj.hexNumberFormat) {
+                hexMenuRadio.isSelected = true
+            }else {
+                hexMenuRadio.toggleGroup.toggles[1].isSelected = true
+            }
+            changeNumberBase()
+        }
+    }
+
     @FXML
     fun reset(): Unit {
         reset.invoke()
@@ -157,5 +182,19 @@ class MainController(
     @FXML
     fun onRegistryAction(): Unit {
         nextMirTF.requestFocus()
+    }
+    
+    @FXML
+    fun openMicroprogram(): Unit {
+        val fc = FileChooser()
+        fc.title = "Apri un microprogramma"
+        fc.extensionFilters.add(ExtensionFilter("Microprogramma", "*.mic1"))
+        fc.initialDirectory = File(System.getProperty("user.home"))
+        val file: File? = fc.showOpenDialog(null)
+        file?.let {
+            loadMic1Project(Mic1Project(
+                relExecPath = it.toRelativeString(File(".").canonicalFile)
+            ))
+        }
     }
 }

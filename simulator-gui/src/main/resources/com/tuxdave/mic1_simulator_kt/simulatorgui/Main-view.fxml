@@ -14,8 +14,8 @@
                         <MenuItem mnemonicParsing="false" onAction="#close" text="Esci" />
                   <Menu mnemonicParsing="false" text="Apri...">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Microprogramma" />
-                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Microprogramma" />
+                        <MenuItem mnemonicParsing="false" onAction="#openMicroprogram" text="Apri Microprogramma" />
+                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Macroprogramma" />
                         <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto MAL" />
                         <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
                      </items>

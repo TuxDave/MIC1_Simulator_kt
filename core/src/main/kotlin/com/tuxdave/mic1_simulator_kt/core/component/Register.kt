@@ -48,6 +48,10 @@ enum class RegNames(private val decodeIndex: UByte?) {
         fun getFromDecodeUnit(i: UByte): RegNames? {
             return RegNames.entries.find {it.decodeIndex == i}
         }
+
+        fun getFromName(s: String): RegNames {
+            return RegNames.entries.find { it.toString() == s.uppercase() } ?: MDR
+        }
     }
 }
 
