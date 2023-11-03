@@ -9,7 +9,11 @@ class Runner(
         super.run()
         while (running){
             exec()
-            sleep(maxOf(waitTimeSeconds * 1000L, 100))
+            if (waitTimeSeconds != 0) {
+                try{
+                    sleep(maxOf(waitTimeSeconds * 1000L, 100))
+                } catch (e: Exception) {}
+            }
         }
     }
 }
