@@ -12,37 +12,47 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#close" text="Esci" />
-                  <Menu mnemonicParsing="false" text="Apri...">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#openMicroprogram" text="Apri Microprogramma" />
-                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Macroprogramma" />
-                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto MAL" />
-                        <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
-                     </items>
-                  </Menu>
-                  <MenuItem mnemonicParsing="false" onAction="#closeProject" text="Chiudi Progetto" />
+                        <Menu mnemonicParsing="false" text="Apri...">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#openMicroprogram" text="Apri Microprogramma" />
+                                <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Macroprogramma" />
+                                <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto MAL" />
+                                <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
+                            </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#closeProject" text="Chiudi Progetto" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#reset" text="Reset" />
-                  <SeparatorMenuItem mnemonicParsing="false" text="Base Numerica" />
-                  <RadioMenuItem fx:id="hexMenuRadio" mnemonicParsing="false" onAction="#changeNumberBase" selected="true" text="Hex (base 16)">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="number_format" />
-                     </toggleGroup>
-                  </RadioMenuItem>
-                  <RadioMenuItem fx:id="decMenuRadio" mnemonicParsing="false" onAction="#changeNumberBase" text="Dec (base 10)" toggleGroup="$number_format" />
+                        <SeparatorMenuItem mnemonicParsing="false" text="Base Numerica" />
+                        <RadioMenuItem fx:id="hexMenuRadio" mnemonicParsing="false" onAction="#changeNumberBase" selected="true" text="Hex (base 16)">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="number_format" />
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="decMenuRadio" mnemonicParsing="false" onAction="#changeNumberBase" text="Dec (base 10)" toggleGroup="$number_format" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
                     <items>
+                        <SeparatorMenuItem mnemonicParsing="false" text="We">
+                     <content>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Livello Archi." />
+                     </content></SeparatorMenuItem>
                         <RadioMenuItem mnemonicParsing="false" onAction="#todo" selected="true" text="Mic1">
                             <toggleGroup>
                                 <ToggleGroup fx:id="view_mode" />
                             </toggleGroup>
                         </RadioMenuItem>
                         <RadioMenuItem mnemonicParsing="false" onAction="#todo" text="IJVM" toggleGroup="$view_mode" />
+                        <SeparatorMenuItem>
+                            <content>
+                                <Text styleClass="textSeparator" text="Finestre" />
+                            </content>
+                        </SeparatorMenuItem>
+                        <CheckMenuItem fx:id="controlStoreToggle" mnemonicParsing="false" onAction="#controlStoreVisibilityChange" text="Control Store" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -130,18 +140,20 @@
                                 <Label text="MIR (Microistruzione)" />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
                                 <TextField fx:id="mirTF" editable="false" prefHeight="26.0" prefWidth="260.0" HBox.hgrow="NEVER">
-                           <font>
-                              <Font size="11.0" />
-                           </font></TextField>
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </TextField>
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
                                 <Label text="Microistruzione Succ." />
                                 <Separator minWidth="-Infinity" visible="false" HBox.hgrow="ALWAYS" />
                                 <TextField fx:id="nextMirTF" editable="false" prefHeight="26.0" prefWidth="260.0" HBox.hgrow="NEVER">
-                           <font>
-                              <Font size="11.0" />
-                           </font></TextField>
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </TextField>
                             </HBox>
                             <Separator orientation="VERTICAL" prefHeight="10.0" visible="false" />
                             <HBox>
@@ -154,20 +166,20 @@
                 </Tab>
             </tabs>
         </TabPane>
-      <HBox prefHeight="34.0" prefWidth="738.0" spacing="3.0">
-         <children>
-            <Button fx:id="runButton" disable="true" mnemonicParsing="false" onAction="#start" prefWidth="140.0" text="Run" />
-            <Spinner fx:id="waitSpinner" editable="true" prefHeight="26.0" prefWidth="116.0" />
-            <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stop" prefWidth="140.0" text="Stop" />
-            <Separator prefWidth="100.0" visible="false" HBox.hgrow="NEVER" />
-            <Button fx:id="microStepButton" disable="true" mnemonicParsing="false" onAction="#runMicroStep" prefWidth="140.0" text="Micro Step" />
-            <Button fx:id="macroStepButton" disable="true" mnemonicParsing="false" prefWidth="140.0" text="Macro Step" />
-            <Separator prefWidth="200.0" visible="false" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#reset" prefWidth="140.0" text="Reset" />
-         </children>
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin>
-      </HBox>
+        <HBox prefHeight="34.0" prefWidth="738.0" spacing="3.0">
+            <children>
+                <Button fx:id="runButton" disable="true" mnemonicParsing="false" onAction="#start" prefWidth="140.0" text="Run" />
+                <Spinner fx:id="waitSpinner" editable="true" prefHeight="26.0" prefWidth="116.0" />
+                <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stop" prefWidth="140.0" text="Stop" />
+                <Separator prefWidth="100.0" visible="false" HBox.hgrow="NEVER" />
+                <Button fx:id="microStepButton" disable="true" mnemonicParsing="false" onAction="#runMicroStep" prefWidth="140.0" text="Micro Step" />
+                <Button fx:id="macroStepButton" disable="true" mnemonicParsing="false" prefWidth="140.0" text="Macro Step" />
+                <Separator prefWidth="200.0" visible="false" HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" onAction="#reset" prefWidth="140.0" text="Reset" />
+            </children>
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </HBox>
     </children>
 </VBox>

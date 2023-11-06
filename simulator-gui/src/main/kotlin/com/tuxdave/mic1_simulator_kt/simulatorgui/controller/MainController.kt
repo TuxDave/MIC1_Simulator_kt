@@ -6,6 +6,7 @@ import com.tuxdave.mic1_simulator_kt.simulatorgui.Runner
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.Mic1Project
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.ProjectListener
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
@@ -89,6 +90,8 @@ class MainController(
     lateinit var hexMenuRadio: RadioMenuItem
     @FXML
     lateinit var decMenuRadio: RadioMenuItem
+    @FXML
+    lateinit var controlStoreToggle: CheckMenuItem
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
         waitSpinner.valueFactory = IntegerSpinnerValueFactory(0, 20, 0, 1)
@@ -170,6 +173,7 @@ class MainController(
 
     @FXML
     fun reset(): Unit {
+        controlStoreVisibilityChange(false)
         fun loadMic1Project(proj: Mic1Project): Unit {
             ijvmProject = null
             proj.relExecPath?.let {
@@ -307,5 +311,16 @@ class MainController(
     override fun ijvmProjectChanged(proj: Any?) {
         TODO("Not yet implemented")
         super.ijvmProjectChanged(proj)
+    }
+
+    @FXML
+    @JvmOverloads
+    fun controlStoreVisibilityChange(newState: Boolean? = null) {
+        if(newState != null) {
+            controlStoreToggle.isVisible = newState
+            controlStoreVisibilityChange()
+        } else {
+            todo() //TODO: Implementare la finestra del control store
+        }
     }
 }
