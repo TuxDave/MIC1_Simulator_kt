@@ -44,6 +44,8 @@ class MainController(
     private val projectListeners: MutableList<ProjectListener> = mutableListOf()
 
     @FXML
+    lateinit var tabPane: TabPane
+    @FXML
     lateinit var mic1Tab: Tab
 
     @FXML
@@ -254,12 +256,13 @@ class MainController(
 
     @FXML
     fun start() {
-        if (mic1Project != null)
+        if (mic1Project != null){
+            tabPane.isDisable = true
             runner = Runner(waitSpinner.value) {
                 runMicroStep()
             }
-        else if (ijvmProject != null) {//TODO: Crea il runner
-        }else return
+        } else if (ijvmProject != null) {//TODO: Crea il runner
+        } else return
         runner.running = true
         runner.start()
 
@@ -272,6 +275,7 @@ class MainController(
             runner.running = false
             runButton.isDisable = false
             stopButton.isDisable = true
+            tabPane.isDisable = false
         } catch (_: UninitializedPropertyAccessException) {}
     }
 

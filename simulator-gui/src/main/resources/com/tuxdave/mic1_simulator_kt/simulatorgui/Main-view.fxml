@@ -52,7 +52,7 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <TabPane>
+        <TabPane fx:id="tabPane">
             <tabs>
                 <Tab fx:id="mic1Tab" closable="false" text="Mic1">
                     <HBox prefHeight="436.0" prefWidth="738.0" VBox.vgrow="ALWAYS">
