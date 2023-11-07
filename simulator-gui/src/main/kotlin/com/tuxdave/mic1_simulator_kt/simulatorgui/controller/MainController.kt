@@ -173,7 +173,6 @@ class MainController(
 
     @FXML
     fun reset(): Unit {
-        controlStoreVisibilityChange(false)
         fun loadMic1Project(proj: Mic1Project): Unit {
             ijvmProject = null
             proj.relExecPath?.let {
@@ -262,13 +261,11 @@ class MainController(
     fun start() {
         if (mic1Project != null){
             tabPane.isDisable = true
-            runner = Runner(waitSpinner.value) {
-                runMicroStep()
-            }
+            runner = Runner(waitSpinner.value, exec = ::runMicroStep)
         } else if (ijvmProject != null) {//TODO: Crea il runner
         } else return
         runner.running = true
-        runner.start()
+        runner.start() //TODO: converti in coroutine perchè sennò javafx litiga con i threads (o vedi come usare i threads con javafx
 
         runButton.isDisable = true
         stopButton.isDisable = false
@@ -309,7 +306,7 @@ class MainController(
     }
 
     override fun ijvmProjectChanged(proj: Any?) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
         super.ijvmProjectChanged(proj)
     }
 
