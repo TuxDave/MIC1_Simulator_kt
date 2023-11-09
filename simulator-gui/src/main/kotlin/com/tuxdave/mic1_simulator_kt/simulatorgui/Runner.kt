@@ -10,8 +10,8 @@ class Runner(
         while (running){
             exec()
             try{
-                sleep(maxOf(waitTimeSeconds * 1000L, 75))
-            } catch (e: Exception) {}
+                sleep(maxOf(waitTimeSeconds * 1000L, 1))
+            } catch (_: Exception) {}
         }
     }
 }

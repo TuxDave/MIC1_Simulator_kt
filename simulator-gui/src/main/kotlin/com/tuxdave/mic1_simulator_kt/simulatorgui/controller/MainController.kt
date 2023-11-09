@@ -6,7 +6,7 @@ import com.tuxdave.mic1_simulator_kt.simulatorgui.Runner
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.Mic1Project
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.ProjectListener
-import javafx.event.ActionEvent
+import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
@@ -140,14 +140,14 @@ class MainController(
                     )
                     println(mic1.mic1State.registers[value.toString()])
                 }
-                updateUi()
+                updateMic1Ui()
             }
         }
         projectListeners.add(this)
         reset()
     }
 
-    fun updateUi(): Unit {
+    fun updateMic1Ui(): Unit {
         val state = mic1.mic1State
 
         fun Int.toStringg(radix: Int): String {
@@ -203,7 +203,7 @@ class MainController(
             microStepButton.isDisable = true
             macroStepButton.isDisable = true
         }
-        updateUi()
+        updateMic1Ui()
     }
 
     @FXML
@@ -243,7 +243,7 @@ class MainController(
     @FXML
     fun changeNumberBase(): Unit {
         numberBase = if (hexMenuRadio.isSelected) 16 else 10
-        updateUi()
+        updateMic1Ui()
     }
 
     @FXML
@@ -254,7 +254,7 @@ class MainController(
     @FXML
     private fun runMicroStep(): Unit{
         mic1.run()
-        updateUi()
+        Platform.runLater(::updateMic1Ui)
     }
 
     @FXML
