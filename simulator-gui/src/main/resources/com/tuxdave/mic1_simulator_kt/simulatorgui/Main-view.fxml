@@ -20,6 +20,8 @@
                                 <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
                             </items>
                         </Menu>
+                  <MenuItem mnemonicParsing="false" text="Salva" />
+                  <MenuItem mnemonicParsing="false" text="Salva con nome..." />
                         <MenuItem mnemonicParsing="false" onAction="#closeProject" text="Chiudi Progetto" />
                     </items>
                 </Menu>

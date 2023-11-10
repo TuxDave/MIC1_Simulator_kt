@@ -196,7 +196,6 @@ class MainController(
             loadMic1Project(mic1Project!!)
         } else if (false) {
             //TODO: Load ijvmProject
-            //Todo: Load ijvmProject}
         } else {
             runButton.isDisable = true
             stopButton.isDisable = true
@@ -208,6 +207,7 @@ class MainController(
 
     @FXML
     fun closeProject(): Unit {
+        //TODO: chiedi di salvare se modificato prima di chiudere
         mic1Project = null
         //TODO: close ijvmProject
         reset()
@@ -265,7 +265,7 @@ class MainController(
         } else if (ijvmProject != null) {//TODO: Crea il runner
         } else return
         runner.running = true
-        runner.start() //TODO: converti in coroutine perchè sennò javafx litiga con i threads (o vedi come usare i threads con javafx
+        runner.start()
 
         runButton.isDisable = true
         stopButton.isDisable = false
@@ -282,6 +282,8 @@ class MainController(
 
     @FXML
     fun openMicroprogram(): Unit {
+        closeProject() //close all opened
+
         val fc = FileChooser()
         fc.title = "Apri un microprogramma"
         fc.extensionFilters.add(ExtensionFilter("Microprogramma", "*.mic1"))
