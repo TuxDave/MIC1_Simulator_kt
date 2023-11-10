@@ -16,7 +16,10 @@ import kotlin.ClassCastException
  * Clock da fornire esternamente chiamando il metodo run() per decidere la velocità di esecuzione
  * */
 @Suppress(names = arrayOf("UNCHECKED_CAST", "NAME_SHADOWING"))
-class Mic1: ClockBasedComponent(){
+class Mic1 : ClockBasedComponent() {
+    private var alreadyExecuted: Boolean = false
+    var mic1ChangeListeners = mutableListOf<Mic1ChangeListener>()
+
     private var registers: Map<RegNames, Register<Number>> = mapOf(
         Pair(RegNames.MAR, Register32() as Register<Number>),
         Pair(RegNames.MDR, Register32() as Register<Number>),
@@ -66,7 +69,7 @@ class Mic1: ClockBasedComponent(){
             registers[RegNames.PC] as? Register32 ?: throw IllegalArgumentException("MEMORY: PC non trovato")
         )
 
-        clockCycle = arrayOf(alu,shifter, cBus, memory4GB)
+        clockCycle = arrayOf(alu, shifter, cBus, memory4GB)
     }
 
     private fun dispatch() {
@@ -79,9 +82,9 @@ class Mic1: ClockBasedComponent(){
             registers[which]?.outputEnabled = true
         }
 
-        run{ // enabling the input on the C receiver registers
+        run { // enabling the input on the C receiver registers
             val cs = mir[MirRange.C]
-            cs.zip(C_SEQUENCE).forEach{
+            cs.zip(C_SEQUENCE).forEach {
                 if (it.first) {
                     registers[it.second]?.inputEnabled = true
                 }
@@ -100,7 +103,7 @@ class Mic1: ClockBasedComponent(){
         if (jamcnz[0]) { //salto a molte vie
             val mbr: Int = (registers[RegNames.MBR] as? Register8)?.output?.toInt() ?: 0
             for (i in 8 downTo 1) { //dalla posizione più a destra alla penultima a sinistra
-                nextAddr[i] = ((mbr shr (8-i)) % 2 == 1) || nextAddr[i]
+                nextAddr[i] = ((mbr shr (8 - i)) % 2 == 1) || nextAddr[i]
             }
         } else if (jamcnz[1]) { //salto se ultima operazione avesse risultato negativo
             nextAddr[0] = nextAddr[0] || alu.n
@@ -111,6 +114,8 @@ class Mic1: ClockBasedComponent(){
     }
 
     override fun run() {
+        if (!alreadyExecuted)
+            alreadyExecuted = true
         mir.data = controlStore[mpc]
         dispatch()
         clockCycle.forEach { it.run() }
@@ -136,12 +141,12 @@ class Mic1: ClockBasedComponent(){
 
         val magic = ByteArray(4)
         reader.read(magic)
-        if(!magic.contentEquals(byteArrayOf(0x12, 0x34, 0x56, 0x78))) {
+        if (!magic.contentEquals(byteArrayOf(0x12, 0x34, 0x56, 0x78))) {
             return "Impossibile caricare questo file: non è un formato eseguibile da MIC1 (magic constant)"
         }
 
         var c = -1
-        while(n > 0) {
+        while (n > 0) {
             n = reader.read(buff)
             controlStore[++c] = buff[0].toUByte().toBooleanArray(8) +
                     buff[1].toUByte().toBooleanArray(8) +
@@ -182,6 +187,7 @@ class Mic1: ClockBasedComponent(){
     fun setMemoryValueFromCellNumber(position: Int, value: Int): Boolean {
         return if (value in 0 until Memory4GB.MAX_ADDR) {
             memory4GB[position] = value
+            mic1ChangeListeners.forEach { if(!alreadyExecuted) it.memChanged(addr = position) }
             true
         } else false
     }
@@ -196,10 +202,15 @@ class Mic1: ClockBasedComponent(){
         val r = registers[reg] ?: return false
         try {
             (r as Register32).value = value
+            if (!alreadyExecuted)
+                mic1ChangeListeners.forEach { it.regChanged(reg) }
             return true
-        } catch (_: ClassCastException) {}
+        } catch (_: ClassCastException) {
+        }
         return try {
             (r as Register8).value = value.toByte()
+            if (!alreadyExecuted)
+                mic1ChangeListeners.forEach { it.regChanged(reg) }
             true
         } catch (e: ClassCastException) {
             false

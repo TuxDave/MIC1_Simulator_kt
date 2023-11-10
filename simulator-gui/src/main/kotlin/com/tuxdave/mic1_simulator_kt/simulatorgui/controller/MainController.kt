@@ -1,6 +1,7 @@
 package com.tuxdave.mic1_simulator_kt.simulatorgui.controller
 
 import com.tuxdave.mic1_simulator_kt.core.Mic1
+import com.tuxdave.mic1_simulator_kt.core.Mic1ChangeListener
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import com.tuxdave.mic1_simulator_kt.simulatorgui.Runner
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
@@ -16,6 +17,9 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.net.URL
 import java.util.*
@@ -24,7 +28,7 @@ import kotlin.system.exitProcess
 class MainController(
     private val mic1Getter: () -> Mic1 = { Mic1() },
     private val reset: () -> Unit = {}
-) : Initializable, ProjectListener {
+) : Initializable, ProjectListener, Mic1ChangeListener {
     private val mic1: Mic1
         get() = mic1Getter()
 
@@ -32,10 +36,10 @@ class MainController(
 
     private var numberBase: Int = 0
 
-    private var mic1Project: Mic1Project? = null
+    private var mic1Project: Pair<String, Mic1Project>? = null
         set(value) {
             field = value
-            projectListeners.forEach {it.mic1ProjectChanged(field)}
+            projectListeners.forEach {it.mic1ProjectChanged(field?.second)}
         }
     private var ijvmProject: Any? = null
         set(value) {
@@ -180,6 +184,9 @@ class MainController(
                 proj.startValues.forEach { (regNames, value) ->
                     mic1.setRegisterValue(regNames, value)
                 }
+                proj.startMemory.forEach { (addr, value) ->
+                    mic1.setMemoryValueFromCellNumber(addr, value)
+                }
                 if (proj.hexNumberFormat) {
                     hexMenuRadio.isSelected = true
                 } else {
@@ -192,8 +199,9 @@ class MainController(
 
         stop()
         reset.invoke()
+        mic1.mic1ChangeListeners.add(this)
         if (mic1Project != null) {
-            loadMic1Project(mic1Project!!)
+            loadMic1Project(mic1Project!!.second)
         } else if (false) {
             //TODO: Load ijvmProject
         } else {
@@ -205,12 +213,53 @@ class MainController(
         updateMic1Ui()
     }
 
+    /**
+    * fun checking if the project is edited and if it is asks for saving.
+    * */
+    private fun checkEdited() {
+        if(mic1Project != null) {
+            val projMetal = File(mic1Project!!.first)
+            if(projMetal.isFile){ //is an existing project
+                val oldProjText = Json.decodeFromString<Mic1Project>(projMetal.readText())
+                if(oldProjText != mic1Project!!.second) {
+                    if(askForSave("Il progetto è stato modificato, vuoi salvarlo?")) {
+                        save()
+                    }
+                }
+            } else { // Is just a microprogram, not a project, create?
+                if(askForSave("Il progetto non esiste, vuoi crearlo?")) {
+                    saveAs()
+                }
+            }
+        } else if (false) { //todo: check edited ijvmProject
+
+        }
+    }
+
     @FXML
     fun closeProject(): Unit {
-        //TODO: chiedi di salvare se modificato prima di chiudere
+        checkEdited()
         mic1Project = null
         //TODO: close ijvmProject
         reset()
+    }
+
+    private fun askForSave(msg: String): Boolean {
+        val ask = Alert(Alert.AlertType.CONFIRMATION)
+        ask.title = "Richiesta di salvataggio..."
+        ask.title = "Salvare il progetto?"
+        ask.contentText = msg
+        ask.showAndWait()
+        ask.isResizable = false
+        return ask.result == ButtonType.OK
+    }
+
+    fun save(){ // todo: implement the saver
+
+    }
+
+    fun saveAs(){
+
     }
 
     @FXML
@@ -290,9 +339,9 @@ class MainController(
         fc.initialDirectory = File(System.getProperty("user.home"))
         val file: File? = fc.showOpenDialog(null)
         file?.let {
-            mic1Project = Mic1Project(
+            mic1Project = Pair(it.parent, Mic1Project(
                 relExecPath = it.toRelativeString(File(".").canonicalFile)
-            )
+            ))
             reset()
         }
     }
@@ -310,6 +359,20 @@ class MainController(
     override fun ijvmProjectChanged(proj: Any?) {
         //TODO("Not yet implemented")
         super.ijvmProjectChanged(proj)
+    }
+
+    override fun regChanged(reg: RegNames) {
+        mic1Project?.let {
+            val proj = it.second
+            proj.startValues[reg] = mic1.mic1State.registers[reg.toString()]!!
+        }
+    }
+
+    override fun memChanged(addr: Int) {
+        mic1Project?.let {
+            val proj = it.second
+            proj.startMemory[addr] = mic1.getMic1MemoryRange(addr..addr)[0]
+        }
     }
 
     @FXML

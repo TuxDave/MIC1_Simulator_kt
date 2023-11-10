@@ -12,5 +12,6 @@ data class Mic1Project(
     val startValues: MutableMap<RegNames, Int> = Mic1().mic1State.registers.map {
         Pair(RegNames.getFromName(it.key), it.value)
     }.toMap().toMutableMap(),
+    val startMemory: MutableMap<Int, Int> = mutableMapOf(),
     val mpcBreakPoints: MutableList<Int> = mutableListOf()
 )
