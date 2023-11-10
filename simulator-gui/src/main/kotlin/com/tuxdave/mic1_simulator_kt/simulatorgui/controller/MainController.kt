@@ -5,6 +5,7 @@ import com.tuxdave.mic1_simulator_kt.core.Mic1ChangeListener
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import com.tuxdave.mic1_simulator_kt.simulatorgui.Runner
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
+import com.tuxdave.mic1_simulator_kt.simulatorgui.openFile
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.Mic1Project
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.ProjectListener
 import javafx.application.Platform
@@ -36,7 +37,7 @@ class MainController(
 
     private var numberBase: Int = 0
 
-    private var mic1Project: Pair<String, Mic1Project>? = null
+    private var mic1Project: Pair<String?, Mic1Project>? = null
         set(value) {
             field = value
             projectListeners.forEach {it.mic1ProjectChanged(field?.second)}
@@ -151,7 +152,7 @@ class MainController(
         reset()
     }
 
-    fun updateMic1Ui(): Unit {
+    private fun updateMic1Ui(): Unit {
         val state = mic1.mic1State
 
         fun Int.toStringg(radix: Int): String {
@@ -180,7 +181,7 @@ class MainController(
         fun loadMic1Project(proj: Mic1Project): Unit {
             ijvmProject = null
             proj.relExecPath?.let {
-                mic1.loadMicroProgram(File(it).toURI().toURL())
+                mic1.loadMicroProgram(File("$currentDir/$it").toURI().toURL())
                 proj.startValues.forEach { (regNames, value) ->
                     mic1.setRegisterValue(regNames, value)
                 }
@@ -218,17 +219,24 @@ class MainController(
     * */
     private fun checkEdited() {
         if(mic1Project != null) {
-            val projMetal = File(mic1Project!!.first)
-            if(projMetal.isFile){ //is an existing project
-                val oldProjText = Json.decodeFromString<Mic1Project>(projMetal.readText())
+            if(mic1Project!!.first != null){ //is an existing project
+                val oldProjText = Json.decodeFromString<Mic1Project>(File(mic1Project!!.first!!).readText())
                 if(oldProjText != mic1Project!!.second) {
                     if(askForSave("Il progetto è stato modificato, vuoi salvarlo?")) {
-                        save()
+                        saveAs(mic1Project!!.second, mic1Project!!.first!!)
                     }
                 }
             } else { // Is just a microprogram, not a project, create?
                 if(askForSave("Il progetto non esiste, vuoi crearlo?")) {
-                    saveAs()
+                    val fc = FileChooser()
+                    fc.initialDirectory = File(System.getProperty("user.home"))
+                    fc.title = "Salva il progetto"
+                    fc.initialFileName = "projName.mic1proj"
+                    fc.extensionFilters.add(ExtensionFilter("Progetto Mic1", "*.mic1proj"))
+                    val f: File? = fc.showSaveDialog(null)
+                    f?.let{
+                        saveAs(mic1Project!!.second, it.absolutePath)
+                    }
                 }
             }
         } else if (false) { //todo: check edited ijvmProject
@@ -242,24 +250,6 @@ class MainController(
         mic1Project = null
         //TODO: close ijvmProject
         reset()
-    }
-
-    private fun askForSave(msg: String): Boolean {
-        val ask = Alert(Alert.AlertType.CONFIRMATION)
-        ask.title = "Richiesta di salvataggio..."
-        ask.title = "Salvare il progetto?"
-        ask.contentText = msg
-        ask.showAndWait()
-        ask.isResizable = false
-        return ask.result == ButtonType.OK
-    }
-
-    fun save(){ // todo: implement the saver
-
-    }
-
-    fun saveAs(){
-
     }
 
     @FXML
@@ -333,15 +323,27 @@ class MainController(
     fun openMicroprogram(): Unit {
         closeProject() //close all opened
 
-        val fc = FileChooser()
-        fc.title = "Apri un microprogramma"
-        fc.extensionFilters.add(ExtensionFilter("Microprogramma", "*.mic1"))
-        fc.initialDirectory = File(System.getProperty("user.home"))
-        val file: File? = fc.showOpenDialog(null)
-        file?.let {
-            mic1Project = Pair(it.parent, Mic1Project(
-                relExecPath = it.toRelativeString(File(".").canonicalFile)
+        openFile(
+            "Apri un Microprogramma",
+            mapOf(Pair("Microprogramma", "*.mic1"))
+        )?.let {
+            currentDir = it.parent
+            mic1Project = Pair(null, Mic1Project(
+                relExecPath = it.name
             ))
+            reset()
+        }
+    }
+
+    @FXML
+    fun openMic1Project(){
+        closeProject()
+        openFile(
+            "Apri un progetto Mic1",
+            mapOf(Pair("Progetto Mic1", "*.mic1proj"))
+        )?.let {
+            currentDir = it.parent
+            mic1Project = Pair(it.absolutePath, Json.decodeFromString(it.readText()))
             reset()
         }
     }
@@ -384,5 +386,9 @@ class MainController(
         } else {
             todo() //TODO: Implementare la finestra del control store
         }
+    }
+
+    companion object{
+        var currentDir = System.getProperty("user.dir")
     }
 }

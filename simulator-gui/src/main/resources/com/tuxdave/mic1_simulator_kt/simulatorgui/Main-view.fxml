@@ -16,7 +16,7 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#openMicroprogram" text="Apri Microprogramma" />
                                 <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Macroprogramma" />
-                                <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto MAL" />
+                                <MenuItem mnemonicParsing="false" onAction="#openMic1Project" text="Apri Progetto Mic1" />
                                 <MenuItem mnemonicParsing="false" onAction="#todo" text="Apri Progetto IJVM" />
                             </items>
                         </Menu>

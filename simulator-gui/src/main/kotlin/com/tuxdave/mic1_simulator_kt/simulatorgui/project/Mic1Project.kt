@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Mic1Project(
-    val relExecPath: String? = null,
-    val relSrcPath: String? = null,
+    var relExecPath: String? = null,
+    var relSrcPath: String? = null,
     var hexNumberFormat: Boolean = true,
     val startValues: MutableMap<RegNames, Int> = Mic1().mic1State.registers.map {
         Pair(RegNames.getFromName(it.key), it.value)
