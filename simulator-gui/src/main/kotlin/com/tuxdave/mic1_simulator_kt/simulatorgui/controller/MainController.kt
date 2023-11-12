@@ -5,6 +5,7 @@ import com.tuxdave.mic1_simulator_kt.core.Mic1ChangeListener
 import com.tuxdave.mic1_simulator_kt.core.component.RegNames
 import com.tuxdave.mic1_simulator_kt.simulatorgui.Runner
 import com.tuxdave.mic1_simulator_kt.simulatorgui.help.About
+import com.tuxdave.mic1_simulator_kt.simulatorgui.notificationAlert
 import com.tuxdave.mic1_simulator_kt.simulatorgui.openFile
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.Mic1Project
 import com.tuxdave.mic1_simulator_kt.simulatorgui.project.ProjectListener
@@ -22,6 +23,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.FileNotFoundException
 import java.net.URL
 import java.util.*
 import kotlin.system.exitProcess
@@ -181,7 +183,17 @@ class MainController(
         fun loadMic1Project(proj: Mic1Project): Unit {
             ijvmProject = null
             proj.relExecPath?.let {
-                mic1.loadMicroProgram(File("$currentDir/$it").toURI().toURL())
+                try {
+                    mic1.loadMicroProgram(File("$currentDir/$it").toURI().toURL())
+                } catch (e: FileNotFoundException) {
+                    notificationAlert(
+                        Alert.AlertType.ERROR,
+                        "Errore di apertura",
+                        "Impossibile aprire il progetto",
+                        "Si è verificato un problema durante l'apertura del file eseguibile .mic1\n" +
+                                "Il progetto è stato comunque aperto, modificabili i sorgenti."
+                    )
+                }
                 proj.startValues.forEach { (regNames, value) ->
                     mic1.setRegisterValue(regNames, value)
                 }

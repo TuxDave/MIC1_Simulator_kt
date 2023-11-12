@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuxdave.mic1_simulator_kt.simulatorgui.controller.ControlStoreController">
+   <children>
+      <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0">
+        <columns>
+          <TableColumn prefWidth="33.0" text="BRK" />
+          <TableColumn prefWidth="71.0" text="DEC ADDR" />
+            <TableColumn prefWidth="71.0" text="HEX ADDR" />
+            <TableColumn prefWidth="165.0" text="Symbolic" />
+            <TableColumn prefWidth="159.0" text="HEX REPR" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
