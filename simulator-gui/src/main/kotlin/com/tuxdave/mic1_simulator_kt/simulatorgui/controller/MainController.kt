@@ -39,6 +39,9 @@ class MainController(
 
     private var numberBase: Int = 0
 
+    // WINDOWS
+    var controlStoreStage: Stage? = null
+
     private var mic1Project: Pair<String?, Mic1Project>? = null
         set(value) {
             field = value
@@ -396,7 +399,29 @@ class MainController(
             controlStoreToggle.isVisible = newState
             controlStoreVisibilityChange()
         } else {
-            todo() //TODO: Implementare la finestra del control store
+            if(controlStoreStage == null){
+                val fxmlLoader = FXMLLoader(ControlStoreController::class.java.getResource("ControlStore-view.fxml"))
+                fxmlLoader.setControllerFactory {
+                    ControlStoreController(
+                        mic1Getter = {mic1}
+                    )
+                }
+                val scene = Scene(fxmlLoader.load())
+                controlStoreStage = Stage()
+                controlStoreStage!!.title = "Mic1 Control Store"
+                controlStoreStage!!.scene = scene
+                controlStoreStage!!.sizeToScene()
+                controlStoreStage!!.isResizable = false
+                controlStoreStage!!.show()
+                controlStoreStage!!.setOnCloseRequest {
+                    controlStoreToggle.isSelected = false
+                    controlStoreStage = null
+                }
+            } else {
+                controlStoreStage!!.close()
+                controlStoreStage = null
+            }
+
         }
     }
 
